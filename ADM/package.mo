@@ -273,7 +273,7 @@ package ADM
   end physicochemical;
 
 
-  model inflow_ASM
+  model inflow_ASM1
     parameter Real T = 38 "operational temperature, C";
     Real TSS_In "gTSS/m3";
   OpenWasteWater.ADM.OutFlow Out1 annotation(
@@ -322,7 +322,58 @@ package ADM
       </p>
     </html>"),
   Icon(graphics = {Rectangle(origin = {2, 0}, lineThickness = 0.75, extent = {{-22, 62}, {22, -62}})}));
-  end inflow_ASM;
+  end inflow_ASM1;
+
+model inflow_ASM3
+  parameter Real Tdig = 38 "operational temperature, C";
+  Real TSS_In "gTSS/m3";
+  OpenWasteWater.ADM.OutFlow Out1 annotation(
+    Placement(visible = true, transformation(origin = {61, -1}, extent = {{-25, -25}, {25, 25}}, rotation = 0), iconTransformation(origin = {61, -1}, extent = {{-25, -25}, {25, 25}}, rotation = 0)));
+  OpenWasteWater.ASM3.InPipe In1 annotation(
+    Placement(visible = true, transformation(origin = {-56, -2}, extent = {{-26, -26}, {26, 26}}, rotation = 0), iconTransformation(origin = {-68, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+equation
+  Out1.Q + In1.Q = 0.0;
+  Out1.T = Tdig;
+//SOLUBLES
+  Out1.S.su = 0;
+  Out1.S.aa = 0;
+  Out1.S.fa = 0;
+  Out1.S.va = 0;
+  Out1.S.bu = 0;
+  Out1.S.pro = 0;
+  Out1.S.ac = 0;
+  Out1.S.H2 = 0;
+  Out1.S.ch4 = 0;
+  Out1.S.IC = In1.S.ALK "mole/m³, S_ALK";
+  Out1.S.IN = In1.S.NH "gN/m³, S_NH";
+  Out1.S.I = In1.S.I "gCOD/m³, S_I";
+//PARTICULATES
+  Out1.X.c = In1.X.S + In1.X.H + In1.X.A + In1.X.STO "gCOD/m³, All X, exluding X_I";
+  Out1.X.ch = 0;
+  Out1.X.pr = 0;
+  Out1.X.li = 0;
+  Out1.X.su = 0;
+  Out1.X.aa = 0;
+  Out1.X.fa = 0;
+  Out1.X.c4 = 0;
+  Out1.X.pro = 0;
+  Out1.X.ac = 0;
+  Out1.X.H2 = 0;
+  Out1.X.I = In1.X.I "gCOD/m³, X_I";
+  TSS_In = In1.X.SS;
+  annotation(
+    defaultComponentName = "inflow_ASM3",
+    Documentation(info = "<html>
+    <H1 style=\"font-size:20px\">Inteface ASM3 to ADM1 </H1>
+    <p style=\"font-size:20px\">
+    Inflow for combination with the ASM1.
+      Conversion according to the documentation of the ADM1 from the IWA, Appendix C.3, Table C.2
+
+    Parameter T is important as it defines the operational temperature of the digester.
+    </p>
+  </html>"),
+Icon(graphics = {Rectangle(origin = {2, 0}, lineThickness = 0.75, extent = {{-22, 62}, {22, -62}})}));
+end inflow_ASM3;
 
 
 
@@ -814,7 +865,7 @@ package ADM
   end outflow;
 
 
-  model outflow_ASM
+  model outflow_ASM1
     parameter Real T = 15;
   OpenWasteWater.ADM.InFlow In1 annotation(
       Placement(visible = true, transformation(origin = {-76, 6}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-56, 0}, extent = {{-28, -28}, {28, 28}}, rotation = 0)));
@@ -849,8 +900,47 @@ package ADM
     </p>
   </html>"),
   Icon(graphics = {Rectangle(origin = {1, -1}, lineThickness = 0.75, extent = {{-23, 59}, {23, -59}})}));
-  end outflow_ASM;
+  end outflow_ASM1;
 
+model outflow_ASM3
+  parameter Real Tdig = 38;
+OpenWasteWater.ADM.InFlow In1 annotation(
+    Placement(visible = true, transformation(origin = {-76, 6}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-56, 0}, extent = {{-28, -28}, {28, 28}}, rotation = 0)));
+OpenWasteWater.ASM3.OutPipe Out1 annotation(
+    Placement(visible = true, transformation(origin = {56, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {59, -8.88178e-16}, extent = {{-27, -28}, {27, 28}}, rotation = 0)));
+equation
+  Out1.S.O2 = 0;
+  Out1.S.I = In1.S.I;
+  Out1.S.S = In1.S.su + In1.S.aa + In1.S.fa + In1.S.va + In1.S.bu + In1.S.pro + In1.S.ac + In1.S.H2 + In1.S.ch4;
+  Out1.S.NH = In1.S.IN;
+  Out1.S.N2 = 0;
+  Out1.S.NO = 0;
+  Out1.S.ALK = In1.S.IC;
+
+  Out1.X.I = In1.X.I;
+  Out1.X.S = In1.X.c + In1.X.ch + In1.X.pr + In1.X.li + In1.X.su + In1.X.aa + In1.X.fa + In1.X.c4 + In1.X.pro + In1.X.ac + In1.X.H2;
+  Out1.X.H = 0;
+  Out1.X.STO = 0;
+  Out1.X.A = 0;
+  Out1.X.SS = 0.75 * (In1.X.I + In1.X.c + In1.X.ch + In1.X.pr + In1.X.li + In1.X.su + In1.X.aa + In1.X.fa + In1.X.c4 + In1.X.pro + In1.X.ac + In1.X.H2);
+
+  Out1.Q + In1.Q = 0.0;
+  Out1.T = Tdig;
+
+annotation(
+  defaultComponentName = "outflow_ASM",
+  Documentation(info = "<html>
+  <H1 style=\"font-size:20px\">Interface ADM1 to ASM3</H1>
+  <p style=\"font-size:20px\">
+  Outflow for combination with the ASM3.
+
+  Conversion according to the documentation of the ADM1 from the IWA, Appendix C.3, Table C.2
+
+  Temperature T is set back to the wastewater temperature
+  </p>
+</html>"),
+Icon(graphics = {Rectangle(origin = {1, -1}, lineThickness = 0.75, extent = {{-23, 59}, {23, -59}})}));
+end outflow_ASM3;
 
 
 
