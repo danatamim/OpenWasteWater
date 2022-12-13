@@ -2,14 +2,10 @@ within OpenWasteWater;
 
 package ASM3 "Component models for the Activated Sludge Model No.3"
   partial model kinetic
-  
-  // Hydrolysis
-  
+    // Hydrolysis
     parameter Real k_h15 = 2.5 "d-1";
-    parameter Real K_X =   1.0 "-";
-  
-  // Heterotrophic organisms X H , aerobic and denitrifying activity
-  
+    parameter Real K_X = 1.0 "-";
+    // Heterotrophic organisms X H , aerobic and denitrifying activity
     parameter Real k_STO15 = 3.54;
     parameter Real eta_NO = 0.6 "-";
     parameter Real K_HO2 = 0.2 "gO2/m3";
@@ -23,9 +19,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     parameter Real b_HNO15 = 0.07 "d-1";
     parameter Real b_STOO215 = 0.14 "d-1";
     parameter Real b_STONO15 = 0.07 "d-1";
-  
-  // Autotrophic organisms X A , nitrifying activity
-  
+    // Autotrophic organisms X A , nitrifying activity
     parameter Real muemA15 = 0.6 "d-1";
     parameter Real K_ANH = 1.0 "gN/m3";
     parameter Real K_AO2 = 0.5 "gO2/m3";
@@ -34,15 +28,12 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     parameter Real b_ANO15 = 0.03 "d-1";
     parameter Real eta_H = 0.8 "-";
     parameter Real k_a15 = 0.05 "m3/(g d)";
-  
-  // stoichiometric and composition parameters for ASM3
-  
+    // stoichiometric and composition parameters for ASM3
     parameter Real f_SI = 0.0 "gSI/gXS";
     parameter Real Y_STOO2 = 0.85 "gXH/gSS";
     parameter Real Y_STONO = 0.80 "gXH/gSS";
     parameter Real Y_HO2 = 0.63 "gXH/gSS";
     parameter Real Y_HNO = 0.54 "gXH/gSS";
-  
     parameter Real Y_A = 0.24 "gXA/gSNH";
     parameter Real f_XI = 0.2 "gXI/gXBM";
     parameter Real iN_SI = 0.01 "gSNH/gSI";
@@ -53,25 +44,69 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     parameter Real iSS_XI = 0.75 "gSS/gXI";
     parameter Real iSS_XS = 0.75 "gSS/gXS";
     parameter Real iSS_BM = 0.9 "gSS/gBM";
-  
-  
-  
-  
-    protected
+    Real t[12], x[12], y[12], z[12];
     Real S_O2sat, TT;
     Real k_STO, k_h, muemH, b_HO2, b_HNO, b_STOO2, b_STONO, muemA, b_AO2, b_ANO;
-    algorithm
-      S_O2sat := fS_O2sat(TT);
-      k_STO := k_STO15 * exp(0.069 * (TT - 15));
-      k_h := k_h15 * exp(0.041 * (TT - 15));
-      muemH := muemH15 * exp(0.069 * (TT - 15));
-      b_HO2 := b_HO215 * exp(0.069 * (TT - 15));
-      b_HNO := b_HNO15 * exp(0.069 * (TT - 15));
-      b_STOO2 := b_STOO215 * exp(0.069 * (TT - 15));
-      b_STONO := b_STONO15 * exp(0.069 * (TT - 15));
-      muemA := muemA15 * exp(0.1 * (TT - 15));
-      b_AO2 := b_AO215 * exp(0.1 * (TT - 15));
-      b_ANO := b_ANO15 * exp(0.091 * (TT - 15));
+  algorithm
+    S_O2sat := fS_O2sat(TT);
+    k_STO := k_STO15*exp(0.069*(TT - 15));
+    k_h := k_h15*exp(0.041*(TT - 15));
+    muemH := muemH15*exp(0.069*(TT - 15));
+    b_HO2 := b_HO215*exp(0.069*(TT - 15));
+    b_HNO := b_HNO15*exp(0.069*(TT - 15));
+    b_STOO2 := b_STOO215*exp(0.069*(TT - 15));
+    b_STONO := b_STONO15*exp(0.069*(TT - 15));
+    muemA := muemA15*exp(0.1*(TT - 15));
+    b_AO2 := b_AO215*exp(0.1*(TT - 15));
+    b_ANO := b_ANO15*exp(0.091*(TT - 15));
+    t[1] := -0.75;
+    t[2] := 0.51;
+    t[3] := 0.48;
+    t[4] := -0.06;
+    t[5] := -0.21;
+    t[6] := -0.75;
+    t[7] := -0.75;
+    t[8] := -0.6;
+    t[9] := -0.6;
+    t[10] := 0.9;
+    t[11] := -0.75;
+    t[12] := -0.75;
+    x[1] := 1;
+    x[2] := -0.15;
+    x[3] := -0.07;
+    x[4] := -0.6;
+    x[5] := -0.3;
+    x[6] := -0.8;
+    x[7] := -0.28;
+    x[8] := -1;
+    x[9] := -0.35;
+    x[10] := -18.04;
+    x[11] := -0.8;
+    x[12] := -0.28;
+    y[1] := 0.01;
+    y[2] := 0.03;
+    y[3] := 0.03;
+    y[4] := -0.07;
+    y[5] := -0.07;
+    y[6] := 0.066;
+    y[7] := 0.066;
+    y[8] := 0;
+    y[9] := 0;
+    y[10] := -4.24;
+    y[11] := 0.066;
+    y[12] := 0.066;
+    z[1] := 0.001;
+    z[2] := 0.002;
+    z[3] := 0.007;
+    z[4] := -0.005;
+    z[5] := 0.016;
+    z[6] := 0.005;
+    z[7] := 0.025;
+    z[8] := 0;
+    z[9] := 0.025;
+    z[10] := -0.6;
+    z[11] := 0.005;
+    z[12] := 0.025;
     annotation(
       defaultComponentName = "kinetic",
       Documentation(info = "<html>
@@ -82,14 +117,13 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       application these values have do be adoted with model kalibration.
       </p>
     </html>"));
-  
   end kinetic;
 
   function fS_O2sat
     input Real T;
     output Real S_O2sat;
   algorithm
-    S_O2sat := exp(7.7117 - 1.31403 * log(T + 45.93));
+    S_O2sat := exp(7.7117 - 1.31403*log(T + 45.93));
     annotation(
       defaultComponentName = "fS_O2sat",
       Documentation(info = "<html>
@@ -119,8 +153,8 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     v0str := 250.0 "m/d";
     rh := 0.000576 "m3/(g SS)";
     rp := 0.00286 "m3/(g SS)";
-    XTSS := X * 0.75;
-    JS := min(v0str, v0 * exp(-rh * XTSS) - v0 * exp(-rp * XTSS)) * XTSS / 0.75 "g/(m2 d)";
+    XTSS := X*0.75;
+    JS := min(v0str, v0*exp(-rh*XTSS) - v0*exp(-rp*XTSS))*XTSS/0.75 "g/(m2 d)";
     annotation(
       defaultComponentName = "fJS",
       Documentation(info = "<html>
@@ -140,15 +174,15 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     input Real H = 4.5 "fluid height, m";
   protected
     Real kLa_stern "-";
-    Real v = 10 ^ (-6) "kinematic viscosity of water, m²/s";
+    Real v = 10^(-6) "kinematic viscosity of water, m²/s";
     Real g = 9.81 "gravity, m/s²";
     Real w "m/d";
     Real w_stern "-";
   algorithm
-    w := Q * H / V_R;
-    w_stern := w / (84600 * (g * v) ^ (1 / 3));
-    kLa_stern := 1.17 * 10 ^ (-4) * w_stern ^ (-0.1);
-    kLa := kLa_stern * w / (v ^ 2 / g) ^ (1 / 3);
+    w := Q*H/V_R;
+    w_stern := w/(84600*(g*v)^(1/3));
+    kLa_stern := 1.17*10^(-4)*w_stern^(-0.1);
+    kLa := kLa_stern*w/(v^2/g)^(1/3);
     annotation(
       defaultComponentName = "klacalc",
       Documentation(info = "<html>
@@ -163,22 +197,22 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
   end fkLa;
 
   record Soluble
-      Real O2 "gO2/m3 dissolved oxygen";
-      Real I "gCOD/m3 inert soluble organic material";
-      Real S "gCOD/m3 readily biodegradable organic substances";
-      Real NH "gN/m3 ammonium + ammonia N";
-      Real N2 "Dinitrogen" ;
-      Real NO "gN/m3 nitrite + nitrate N";
-      Real ALK "mol/m3 alkalinity";
+    Real O2 "gO2/m3 dissolved oxygen";
+    Real I "gCOD/m3 inert soluble organic material";
+    Real S "gCOD/m3 readily biodegradable organic substances";
+    Real NH "gN/m3 ammonium + ammonia N";
+    Real N2 "Dinitrogen";
+    Real NO "gN/m3 nitrite + nitrate N";
+    Real ALK "mol/m3 alkalinity";
   end Soluble;
 
   record Particulate
-      Real I "gCOD/m3 inert particulate organic material";
-      Real S "gCOD/m3 particulate slowly degradable substrates";
-      Real H "gCOD/m3 heterotrophic bacteria";
-      Real STO "gCOD/m3 cell internal storage product";
-      Real A "gCOD/m3 autotrophic bacteria";
-      Real SS "suspended solids (TSS or VSS)";
+    Real I "gCOD/m3 inert particulate organic material";
+    Real S "gCOD/m3 particulate slowly degradable substrates";
+    Real H "gCOD/m3 heterotrophic bacteria";
+    Real STO "gCOD/m3 cell internal storage product";
+    Real A "gCOD/m3 autotrophic bacteria";
+    Real SS "suspended solids (TSS or VSS)";
   end Particulate;
 
   connector InPipe
@@ -254,15 +288,14 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     parameter Real iXP = 0.06 "-";
     OpenWasteWater.ASM3.Soluble S;
     OpenWasteWater.ASM3.Particulate X;
-    equation
-      TSS = X.SS;
-      COD = X.I + X.S + X.H + X.A + X.STO + S.I + S.S;
-      BOD = 0.25 * (S.S + X.S + X.STO + (1 - fp) * (X.H + X.A));
-      NH4_N = S.NH;
-      NO3_NO2_N = S.NO;
-      TKN = S.NH + iXB * (X.H + X.A) + iXP * (X.I+X.S) ;
-      NT = TKN + S.NO;
-  
+  equation
+    TSS = X.SS;
+    COD = X.I + X.S + X.H + X.A + X.STO + S.I + S.S;
+    BOD = 0.25*(S.S + X.S + X.STO + (1 - fp)*(X.H + X.A));
+    NH4_N = S.NH;
+    NO3_NO2_N = S.NO;
+    TKN = S.NH + iXB*(X.H + X.A) + iXP*(X.I + X.S);
+    NT = TKN + S.NO;
   end WWParameters;
 
   model Mixer2
@@ -274,22 +307,21 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Placement(transformation(extent = {{90, -5}, {110, 15}}, rotation = 0)));
   equation
     0 = Out1.Q + In1.Q + In2.Q;
-  //  Out1.T = In1.T;
-    0 = Out1.T   * Out1.Q + In1.T   * In1.Q + In2.T   * In2.Q;
-    0 = Out1.S.O2 * Out1.Q + In1.S.O2 * In1.Q + In2.S.O2 * In2.Q;
-    0 = Out1.S.I * Out1.Q + In1.S.I * In1.Q + In2.S.I * In2.Q;
-    0 = Out1.S.S * Out1.Q + In1.S.S * In1.Q + In2.S.S * In2.Q;
-    0 = Out1.S.NH * Out1.Q + In1.S.NH * In1.Q + In2.S.NH * In2.Q;
-    0 = Out1.S.N2 * Out1.Q + In1.S.N2 * In1.Q + In2.S.N2 * In2.Q;
-    0 = Out1.S.NO * Out1.Q + In1.S.NO * In1.Q + In2.S.NO * In2.Q;
-    0 = Out1.S.ALK * Out1.Q + In1.S.ALK * In1.Q + In2.S.ALK * In2.Q;
-  
-    0 = Out1.X.I * Out1.Q + In1.X.I * In1.Q + In2.X.I * In2.Q;
-    0 = Out1.X.S * Out1.Q + In1.X.S * In1.Q + In2.X.S * In2.Q;
-    0 = Out1.X.H * Out1.Q + In1.X.H * In1.Q + In2.X.H * In2.Q;
-    0 = Out1.X.STO * Out1.Q + In1.X.STO * In1.Q + In2.X.STO * In2.Q;
-    0 = Out1.X.A * Out1.Q + In1.X.A * In1.Q + In2.X.A * In2.Q;
-    0 = Out1.X.SS * Out1.Q + In1.X.SS * In1.Q + In2.X.SS * In2.Q;
+//  Out1.T = In1.T;
+    0 = Out1.T*Out1.Q + In1.T*In1.Q + In2.T*In2.Q;
+    0 = Out1.S.O2*Out1.Q + In1.S.O2*In1.Q + In2.S.O2*In2.Q;
+    0 = Out1.S.I*Out1.Q + In1.S.I*In1.Q + In2.S.I*In2.Q;
+    0 = Out1.S.S*Out1.Q + In1.S.S*In1.Q + In2.S.S*In2.Q;
+    0 = Out1.S.NH*Out1.Q + In1.S.NH*In1.Q + In2.S.NH*In2.Q;
+    0 = Out1.S.N2*Out1.Q + In1.S.N2*In1.Q + In2.S.N2*In2.Q;
+    0 = Out1.S.NO*Out1.Q + In1.S.NO*In1.Q + In2.S.NO*In2.Q;
+    0 = Out1.S.ALK*Out1.Q + In1.S.ALK*In1.Q + In2.S.ALK*In2.Q;
+    0 = Out1.X.I*Out1.Q + In1.X.I*In1.Q + In2.X.I*In2.Q;
+    0 = Out1.X.S*Out1.Q + In1.X.S*In1.Q + In2.X.S*In2.Q;
+    0 = Out1.X.H*Out1.Q + In1.X.H*In1.Q + In2.X.H*In2.Q;
+    0 = Out1.X.STO*Out1.Q + In1.X.STO*In1.Q + In2.X.STO*In2.Q;
+    0 = Out1.X.A*Out1.Q + In1.X.A*In1.Q + In2.X.A*In2.Q;
+    0 = Out1.X.SS*Out1.Q + In1.X.SS*In1.Q + In2.X.SS*In2.Q;
     annotation(
       defaultComponentName = "Mixer2",
       Documentation(info = "<html>
@@ -368,20 +400,20 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     OpenWasteWater.ASM3.OutPipe Out1 annotation(
       Placement(visible = true, transformation(origin = {98, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {98, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
-    Q = (2 + sin(6.28 * time)) * InQ;
+    Q = (2 + sin(6.28*time))*InQ;
     Out1.S.O2 = InO2;
-    Out1.S.I = 0.089 * InCOD;
-    Out1.S.S = 0.300 * InCOD;
-    Out1.S.NH = 0.623 * InN;
+    Out1.S.I = 0.089*InCOD;
+    Out1.S.S = 0.300*InCOD;
+    Out1.S.NH = 0.623*InN;
     Out1.S.N2 = 0.000;
     Out1.S.NO = 0.000;
     Out1.S.ALK = InALK;
-    Out1.X.I = 0.000 * InCOD;
-    Out1.X.S = 0.600 * InCOD;
-    Out1.X.H = 0.015 * InCOD;
+    Out1.X.I = 0.000*InCOD;
+    Out1.X.S = 0.600*InCOD;
+    Out1.X.H = 0.015*InCOD;
     Out1.S.STO = 0.0;
-    Out1.X.A = 0.005 * InCOD;
-    Out1.X.SS = (1-0.3) * InCOD;
+    Out1.X.A = 0.005*InCOD;
+    Out1.X.SS = (1 - 0.3)*InCOD;
     Out1.Q = -abs(Q);
     Out1.T = T;
   end Inflow_simple;
@@ -393,8 +425,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     OpenWasteWater.ASM3.OutPipe Out1 annotation(
       Placement(visible = true, transformation(origin = {98, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {98, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
-    Q = 60.0 + 10.0 * sin(2 * Modelica.Constants.pi * time) "m3/d";
-  
+    Q = 60.0 + 10.0*sin(2*Modelica.Constants.pi*time) "m3/d";
     Out1.S.O2 = 0.0;
     Out1.S.I = 30.0;
     Out1.S.S = 26.0;
@@ -402,13 +433,12 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     Out1.S.N2 = 0.000;
     Out1.S.NO = 9.1;
     Out1.S.ALK = 4.92;
-  
     Out1.X.I = 28300.0;
     Out1.X.S = 21900.0;
     Out1.X.H = 20000.0;
     Out1.S.STO = 7980.0;
     Out1.X.A = 1394.0;
-    Out1.X.SS = Out1.X.I + Out1.X.S + Out1.X.H + Out1.X.STO +Out1.X.A;
+    Out1.X.SS = Out1.X.I + Out1.X.S + Out1.X.H + Out1.X.STO + Out1.X.A;
     Out1.Q = -abs(Q);
     Out1.T = T;
   end InflowSludgeTest;
@@ -423,20 +453,19 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     OpenWasteWater.ASM3.TechUnits.outWWSensor OutSensor1 annotation(
       Placement(visible = true, transformation(origin = {56, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {81, 41}, extent = {{-17, -17}, {17, 17}}, rotation = 0)));
   equation
-    Out1.S.O2  = T_data.y[1];
-    Out1.S.I   = T_data.y[2];
-    Out1.S.S   = T_data.y[3];
-    Out1.S.NH  = T_data.y[4];
-    Out1.S.N2  = T_data.y[5];
-    Out1.S.NO  = T_data.y[6];
+    Out1.S.O2 = T_data.y[1];
+    Out1.S.I = T_data.y[2];
+    Out1.S.S = T_data.y[3];
+    Out1.S.NH = T_data.y[4];
+    Out1.S.N2 = T_data.y[5];
+    Out1.S.NO = T_data.y[6];
     Out1.S.ALK = T_data.y[7];
-  
-    Out1.X.I   = T_data.y[8];
-    Out1.X.S   = T_data.y[9];
-    Out1.X.H   = T_data.y[10];
+    Out1.X.I = T_data.y[8];
+    Out1.X.S = T_data.y[9];
+    Out1.X.H = T_data.y[10];
     Out1.X.STO = T_data.y[11];
-    Out1.X.A   = T_data.y[12];
-    Out1.X.SS  = T_data.y[13];
+    Out1.X.A = T_data.y[12];
+    Out1.X.SS = T_data.y[13];
     Out1.Q = -abs(T_data.y[14]);
     Out1.T = T;
     OutSensor1.Value.O2 = Out1.S.O2;
@@ -444,7 +473,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     OutSensor1.Value.NO = Out1.S.NO;
     OutSensor1.Value.S = Out1.S.S;
     OutSensor1.Value.Q = abs(T_data.y[14]);
-    OutSensor1.Value.TSS = 0.75 * Out1.X.SS;
+    OutSensor1.Value.TSS = 0.75*Out1.X.SS;
     annotation(
       defaultComponentName = "Inflow",
       Documentation(info = "<html>
@@ -535,8 +564,8 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     OpenWasteWater.ASM3.OutPipe Out1 annotation(
       Placement(transformation(extent = {{90, -10}, {110, 10}}, rotation = 0)));
     parameter Real V_R = 1000 "m3";
-    parameter OpenWasteWater.ASM3.Soluble Sini(O2=4.0, I=30, S=1.15, NH=0.2, N2 = 10.0, NO=16.9, ALK=3.54);
-    parameter OpenWasteWater.ASM3.Particulate Xini(I=78.0, S=37.4, H=1016.0, STO=200.0, A=136.0, SS=1208.0);
+    parameter OpenWasteWater.ASM3.Soluble Sini(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 10.0, NO = 16.9, ALK = 3.54);
+    parameter OpenWasteWater.ASM3.Particulate Xini(I = 78.0, S = 37.4, H = 1016.0, STO = 200.0, A = 136.0, SS = 1208.0);
     extends kinetic;
     extends WWParameters;
     Real r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12, rA;
@@ -549,44 +578,42 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
   equation
 // Temperature adaption
     TT = In1.T;
-  // Hydrolysis
-    r1  = k_h * X.S / X.H / (K_X + X.S / X.H) * X.H;
-  // Heterotrophic organisms, aerobic and denitrifying activity
-    r2  = k_STO * S.S / (K_S + S.S) * S.O2 / (K_HO2 + S.O2) * X.H;
-    r3  = k_STO * eta_NO * S.S / (K_S + S.S) * S.NO / (K_NO + S.NO) * K_HO2 / (K_HO2 + S.O2) * X.H;
-    r4  = muemH * X.STO / X.H / (K_STO + X.STO / X.H) * S.O2 / (K_HO2 + S.O2) * S.NH / (K_HNH + S.NH) * S.ALK / (K_ALK + S.ALK)* X.H;
-    r5  = muemH * eta_NO * X.STO / X.H / (K_STO + X.STO / X.H) * K_HO2 / (K_HO2 + S.O2) * S.NH / (K_HNH + S.NH) * S.NO / (K_NO + S.NO) * S.ALK / (K_ALK + S.ALK)* X.H;
-    r6  = b_HO2  * S.O2 / (K_HO2 + S.O2) * X.H; 
-    r7  = b_HNO  * K_HO2 / (K_HO2 + S.O2) * S.NO / (K_NO + S.NO) * X.H; 
-    r8  = b_STOO2 * S.O2 / (K_HO2 + S.O2) * X.STO; 
-    r9  = b_STONO * K_HO2 / (K_HO2 + S.O2) * S.NO / (K_NO + S.NO) * X.STO; 
-  // Autotrophic organisms, nitrifying activity
-    r10 = muemA * S.NH / (K_ANH + S.NH) * S.O2 / (K_AO2 + S.O2)* S.ALK / (K_ALK + S.ALK) * X.A;
-    r11 = b_AO2  * S.O2 / (K_HO2 + S.O2) * X.A; 
-    r12 = b_ANO  * K_AO2 / (K_AO2 + S.O2) * S.NO / (K_NO + S.NO) * X.A; 
-  // Oxygen transfer
-    rA = kLa * (S_O2sat - S.O2);
+// Hydrolysis
+    r1 = k_h*X.S/X.H/(K_X + X.S/X.H)*X.H;
+// Heterotrophic organisms, aerobic and denitrifying activity
+    r2 = k_STO*S.S/(K_S + S.S)*S.O2/(K_HO2 + S.O2)*X.H;
+    r3 = k_STO*eta_NO*S.S/(K_S + S.S)*S.NO/(K_NO + S.NO)*K_HO2/(K_HO2 + S.O2)*X.H;
+    r4 = muemH*X.STO/X.H/(K_STO + X.STO/X.H)*S.O2/(K_HO2 + S.O2)*S.NH/(K_HNH + S.NH)*S.ALK/(K_ALK + S.ALK)*X.H;
+    r5 = muemH*eta_NO*X.STO/X.H/(K_STO + X.STO/X.H)*K_HO2/(K_HO2 + S.O2)*S.NH/(K_HNH + S.NH)*S.NO/(K_NO + S.NO)*S.ALK/(K_ALK + S.ALK)*X.H;
+    r6 = b_HO2*S.O2/(K_HO2 + S.O2)*X.H;
+    r7 = b_HNO*K_HO2/(K_HO2 + S.O2)*S.NO/(K_NO + S.NO)*X.H;
+    r8 = b_STOO2*S.O2/(K_HO2 + S.O2)*X.STO;
+    r9 = b_STONO*K_HO2/(K_HO2 + S.O2)*S.NO/(K_NO + S.NO)*X.STO;
+// Autotrophic organisms, nitrifying activity
+    r10 = muemA*S.NH/(K_ANH + S.NH)*S.O2/(K_AO2 + S.O2)*S.ALK/(K_ALK + S.ALK)*X.A;
+    r11 = b_AO2*S.O2/(K_HO2 + S.O2)*X.A;
+    r12 = b_ANO*K_AO2/(K_AO2 + S.O2)*S.NO/(K_NO + S.NO)*X.A;
+// Oxygen transfer
+    rA = kLa*(S_O2sat - S.O2);
+      der(S.O2) = In1.Q / V_R * (In1.S.O2 - S.O2) +x[2]*r2+x[4]*r4+x[6]*r6+x[8]*r8+x[10]*r10+x[11]*r11 + rA;
+      der(S.I) = In1.Q / V_R * (In1.S.I - S.I) + f_SI * r1;
+      der(S.S) = In1.Q / V_R * (In1.S.S - S.S) + r1 - r2 - r3;
+      der(S.NH) = In1.Q / V_R * (In1.S.NH - S.NH) + y[1]*r1 + y[2]*r2 + y[3]* r3 + y[4]*r4 + y[5]*r5 +y[6]*r6 + y[7]*r7 + y[10]*r10 + y[11]*r11 + y[12]*r12;
+      der(S.N2) = In1.Q / V_R * (In1.S.N2 - S.N2) - x[3]*r3 - x[3]*r5 - x[7]*r7 -x[9]*r9 - x[12]*r12;
+      der(S.NO) = In1.Q / V_R * (In1.S.NO - S.NO) + x[3]*r3 + x[3]*r5 + x[7]*r7 +x[9]*r9 + x[12]*r12 + 1/Y_A * r10;
+      der(S.ALK) = In1.Q / V_R * (In1.S.ALK - S.ALK) + z[1]*r1 + z[2]*r2 + z[3]*r3 + 
+      z[4]*r4 + z[5]*r5 + z[6]*r6 + z[7]*r7 + z[8]*r8 + z[9]*r9 + z[10]*r10 + z[11]*r11 + z[12]*r12;
   
-    der(S.O2) = In1.Q / V_R * (In1.S.O2 - S.O2) -0.15*r2-0.6*r4-0.8*r6-r8-18.04*r10-0.8*r11 + rA;
-    der(S.I) = In1.Q / V_R * (In1.S.I - S.I) + f_SI * r1;
-    der(S.S) = In1.Q / V_R * (In1.S.S - S.S) + r1 - r2 - r3;
-    der(S.NH) = In1.Q / V_R * (In1.S.NH - S.NH) +0.01*r1+0.03*(r2+r3)-0.07*(r4+r5)+0.066*(r6+r7) -4.24*r10 +0.066*(r11+r12);
-    der(S.N2) = In1.Q / V_R * (In1.S.N2 - S.N2) +0.07*r3+0.3*r5+0.28*r7+0.35*r9+0.28*r12;
-    der(S.NO) = In1.Q / V_R * (In1.S.NO - S.NO)  -0.07*r3-0.3*r5-0.28*r7-0.35*r9-0.28*r12 + 4.17 * r10;
-    der(S.ALK) = In1.Q / V_R * (In1.S.ALK - S.ALK)+0.001*r1+0.002*r2+0.007*r3-0.005*r4+0.016*r5+0.005*r6+0.025*(r7+r9) - 0.6*r10 +0.005*r11+0.025*r12;
-  
-    der(X.I) = In1.Q / V_R * (In1.X.I - X.I) + 0.2*(r6+r7+r11+r12);
-    der(X.S) = In1.Q / V_R * (In1.X.S - X.S) - r1;
-    der(X.H) = In1.Q / V_R * (In1.X.H - X.H) + r4 + r5 - r6 - r7;
-    der(X.STO) = In1.Q / V_R * (In1.X.STO - X.STO) +0.85*r2+0.8*r3-1.6*r4-1.85*r5-r8-r9;
-    der(X.A) = In1.Q / V_R * (In1.X.A - X.A) + r10 - r11 - r12;
-    der(X.SS) = In1.Q / V_R * (In1.X.SS - X.SS) -0.75*r1+0.51*r2+0.48*r3-0.06*r4-0.21*r5-0.75*(r6+r7)-0.6*(r8+10)+0.9*r10-0.75*(r11+r12);
-  
+      der(X.I) = In1.Q / V_R * (In1.X.I - X.I) + f_XI*(r6+r7+r11+r12);
+      der(X.S) = In1.Q / V_R * (In1.X.S - X.S) - r1;
+      der(X.H) = In1.Q / V_R * (In1.X.H - X.H) + r4 + r5 - r6 - r7;
+      der(X.STO) = In1.Q / V_R * (In1.X.STO - X.STO) + Y_STOO2*r2 + Y_STONO*r3 -1/Y_HO2*r4 - 1/Y_HNO*r5 - r8 - r9;
+      der(X.A) = In1.Q / V_R * (In1.X.A - X.A) + r10 - r11 - r12;
+      der(X.SS) = In1.Q / V_R * (In1.X.SS - X.SS) + t[1]*r1 + t[2]*r2 + t[3]*r3 + t[4]*r4 + t[5]*r5 + t[6]*r6 + t[7]*r7 + t[8]*r8 + t[9]*r9 + t[10]*r10 + t[11]*r11 + t[12]*r12;
     Out1.S = S;
     Out1.X = X;
     0 = Out1.Q + In1.Q;
     Out1.T = In1.T;
-  
     OutSensor1.Value.O2 = S.O2;
     OutSensor1.Value.NH = S.NH;
     OutSensor1.Value.NO = S.NO;
@@ -689,17 +716,17 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       else
         t_R = t_D;
       end if;
-      der(Out1.Value.S) = (In1.Value.S - Out1.Value.S) / t_R;
-      der(Out1.Value.NH) = (In1.Value.NH - Out1.Value.NH) / t_R;
-      der(Out1.Value.NO) = (In1.Value.NO - Out1.Value.NO) / t_R;
-      der(Out1.Value.O2) = (In1.Value.O2 - Out1.Value.O2) / t_R;
-      der(Out1.Value.TSS) = (In1.Value.TSS - Out1.Value.TSS) / t_R;
+      der(Out1.Value.S) = (In1.Value.S - Out1.Value.S)/t_R;
+      der(Out1.Value.NH) = (In1.Value.NH - Out1.Value.NH)/t_R;
+      der(Out1.Value.NO) = (In1.Value.NO - Out1.Value.NO)/t_R;
+      der(Out1.Value.O2) = (In1.Value.O2 - Out1.Value.O2)/t_R;
+      der(Out1.Value.TSS) = (In1.Value.TSS - Out1.Value.TSS)/t_R;
       Out1.Value.Q = In1.Value.Q;
     end rElement;
 
     model Sensor
       parameter Real t_D = 0.001 "delay of signal in d";
-      rElement T1(t_D = t_D / 6), T2(t_D = t_D / 6), T3(t_D = t_D / 6), T4(t_D = t_D / 6), T5(t_D = t_D / 6), T6(t_D = t_D / 6);
+      rElement T1(t_D = t_D/6), T2(t_D = t_D/6), T3(t_D = t_D/6), T4(t_D = t_D/6), T5(t_D = t_D/6), T6(t_D = t_D/6);
       inWWSensor S_In1 annotation(
         Placement(visible = true, transformation(origin = {0, -96}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -96}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       outWWSensor S_Out1 annotation(
@@ -732,7 +759,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     initial equation
       Qactual = Qini;
     equation
-      der(Qactual) = k_RT * ((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qactual);
+      der(Qactual) = k_RT*((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qactual);
       In1.Q = Qactual;
       In1.Q + Out1.Q = 0;
       In1.S = Out1.S;
@@ -765,7 +792,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     initial equation
       Qair.Q = Qini;
     equation
-      der(Qair.Q) = k_RT * ((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qair.Q);
+      der(Qair.Q) = k_RT*((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qair.Q);
       annotation(
         defaultComponentName = "blower",
         Documentation(info = "<html>
@@ -814,9 +841,9 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     equation
       e_Q = (-SP_TSS) + In1WWSensor.Value.TSS;
       der(e_Q_i) = e_Q;
-      P_Q = k_P_Q * e_Q;
-      I_Q = k_I_Q * e_Q_i;
-      D_Q = k_D_Q * der(e_Q);
+      P_Q = k_P_Q*e_Q;
+      I_Q = k_I_Q*e_Q_i;
+      D_Q = k_D_Q*der(e_Q);
       Out1Q.Q = min(max(SP_Q_min, 20.0 + P_Q + I_Q + D_Q), SP_Q_max);
       annotation(
         Icon(graphics = {Text(origin = {-1, 0}, lineThickness = 3, extent = {{-37, 18}, {37, -18}}, textString = "Q-Control"), Rectangle(origin = {-3, 0}, lineThickness = 3, extent = {{-51, 38}, {51, -38}})}));
@@ -845,9 +872,9 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     equation
       e_Q = (-SP_V) + In1V.V;
       der(e_Q_i) = e_Q;
-      P_Q = k_P_Q * e_Q;
-      I_Q = k_I_Q * e_Q_i;
-      D_Q = k_D_Q * der(e_Q);
+      P_Q = k_P_Q*e_Q;
+      I_Q = k_I_Q*e_Q_i;
+      D_Q = k_D_Q*der(e_Q);
       Out1Q.Q = min(max(SP_Q_min, 60.0 + P_Q + I_Q + D_Q), SP_Q_max);
       annotation(
         Icon(graphics = {Text(origin = {-1, 0}, lineThickness = 3, extent = {{-37, 18}, {37, -18}}, textString = "Q-Control"), Rectangle(origin = {-3, 0}, lineThickness = 3, extent = {{-51, 38}, {51, -38}})}));
@@ -920,11 +947,11 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
 // control of recirculation
       e_NO = SP_NO - DN2.NO;
       e_NO = der(e_NO_i);
-      P_NO = e_NO * k_P_NO;
-      I_NO = e_NO_i * k_I_NO;
-      D_NO = der(e_NO) * k_D_NO;
+      P_NO = e_NO*k_P_NO;
+      I_NO = e_NO_i*k_I_NO;
+      D_NO = der(e_NO)*k_D_NO;
       C_REC.Q = max(10, Q_REC + P_NO + I_NO + D_NO);
-      h_NO = C_REC.Q / Q_REC;
+      h_NO = C_REC.Q/Q_REC;
 // Aeration
 //constant blowers
       CairR3.Q = Q_air_N1;
@@ -932,15 +959,15 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
 // conrolles aeration of N3
 // O2 setpoint with respect to NH concentration
       e_NH = SP_NH - N3.NH;
-      f = 2 ^ (-e_NH);
+      f = 2^(-e_NH);
       SP_O2 = if f < SP_O2_min then SP_O2_min else if f > SP_O2_max then SP_O2_max else f;
       e_O2 = SP_O2 - N3.O2;
       der(e_O2_i) = e_O2;
-      P_O2 = e_O2 * k_P_O2;
-      I_O2 = e_O2_i * k_I_O2;
-      D_O2 = der(e_O2) * k_D_O2;
+      P_O2 = e_O2*k_P_O2;
+      I_O2 = e_O2_i*k_I_O2;
+      D_O2 = der(e_O2)*k_D_O2;
       CairR5.Q = max(100, Q_air_N3 + P_O2 + I_O2 + D_O2);
-      h_O2 = CairR5.Q / 6000;
+      h_O2 = CairR5.Q/6000;
       annotation(
         Icon(graphics = {Text(origin = {0, 78}, lineThickness = 3, extent = {{-56, 12}, {56, -12}}, textString = "Controler"), Text(origin = {-36, 1}, lineThickness = 1.5, extent = {{-32, 15}, {32, -15}}, textString = "Waster", fontSize = 9), Text(origin = {44, 0}, lineThickness = 1.5, extent = {{-44, 6}, {44, -6}}, textString = "Air", fontSize = 9), Rectangle(origin = {1, 1}, lineThickness = 1.5, extent = {{-99, 99}, {99, -99}}), Line(origin = {1, 59}, points = {{-99, 1}, {99, -1}}, thickness = 1.5, smooth = Smooth.Bezier), Line(origin = {1, -66.4545}, points = {{-99, 1}, {99, -1}}, thickness = 1.5, smooth = Smooth.Bezier), Line(origin = {0, -4}, points = {{0, 62}, {0, -62}}, thickness = 1.5, smooth = Smooth.Bezier)}, coordinateSystem(initialScale = 0.1)),
         defaultComponentName = "Controller",
@@ -979,8 +1006,8 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
   package SedTank
     model Tank
       parameter Real V = 6000;
-      parameter Soluble Sini(O2=4.0, I=30, S=1.15, NH=0.2, N2 = 10.0, NO=16.9, ALK=3.54);
-      parameter Particulate Xini(I=78.0, S=37.4, H=1016.0, STO=200.0, A=136.0, SS=1208.0);
+      parameter Soluble Sini(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 10.0, NO = 16.9, ALK = 3.54);
+      parameter Particulate Xini(I = 78.0, S = 37.4, H = 1016.0, STO = 200.0, A = 136.0, SS = 1208.0);
       OpenWasteWater.ASM3.InPipe In1;
       OpenWasteWater.ASM3.OutPipe Out1;
       OpenWasteWater.ASM3.Soluble S;
@@ -989,21 +1016,19 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       S = Sini;
       X = Xini;
     equation
-      der(S.O2) = In1.Q / V * (In1.S.O2 - S.O2);
-      der(S.I) = In1.Q / V * (In1.S.I - S.I);
-      der(S.S) = In1.Q / V * (In1.S.S - S.S);
-      der(S.NH) = In1.Q / V * (In1.S.NH - S.NH);
-      der(S.N2) = In1.Q / V * (In1.S.N2 - S.N2);
-      der(S.NO) = In1.Q / V * (In1.S.NO - S.NO);
-      der(S.ALK) = In1.Q / V * (In1.S.ALK - S.ALK);
-    
-      der(X.I) = In1.Q / V * (In1.X.I - X.I);
-      der(X.S) = In1.Q / V * (In1.X.S - X.S);
-      der(X.H) = In1.Q / V * (In1.X.H - X.H);
-      der(X.STO) = In1.Q / V * (In1.X.STO - X.STO);
-      der(X.A) = In1.Q / V * (In1.X.A - X.A);
-      der(X.SS) = In1.Q / V * (In1.X.SS - X.SS);
-    
+      der(S.O2) = In1.Q/V*(In1.S.O2 - S.O2);
+      der(S.I) = In1.Q/V*(In1.S.I - S.I);
+      der(S.S) = In1.Q/V*(In1.S.S - S.S);
+      der(S.NH) = In1.Q/V*(In1.S.NH - S.NH);
+      der(S.N2) = In1.Q/V*(In1.S.N2 - S.N2);
+      der(S.NO) = In1.Q/V*(In1.S.NO - S.NO);
+      der(S.ALK) = In1.Q/V*(In1.S.ALK - S.ALK);
+      der(X.I) = In1.Q/V*(In1.X.I - X.I);
+      der(X.S) = In1.Q/V*(In1.X.S - X.S);
+      der(X.H) = In1.Q/V*(In1.X.H - X.H);
+      der(X.STO) = In1.Q/V*(In1.X.STO - X.STO);
+      der(X.A) = In1.Q/V*(In1.X.A - X.A);
+      der(X.SS) = In1.Q/V*(In1.X.SS - X.SS);
       0 = Out1.Q + In1.Q;
       Out1.T = In1.T;
       Out1.S = S;
@@ -1023,9 +1048,8 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     model StorageTank
       extends OpenWasteWater.Icons.storage;
       parameter Real Vini = 100 "m3";
-      parameter Soluble Sini(O2=4.0, I=30, S=1.15, NH=0.2, N2 = 10.0, NO=16.9, ALK=3.54);
-      parameter Particulate Xini(I=78.0, S=37.4, H=1016.0, STO=200.0, A=136.0, SS=1208.0);
-    
+      parameter Soluble Sini(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 10.0, NO = 16.9, ALK = 3.54);
+      parameter Particulate Xini(I = 78.0, S = 37.4, H = 1016.0, STO = 200.0, A = 136.0, SS = 1208.0);
       output Real V;
       Soluble S;
       Particulate X;
@@ -1041,23 +1065,19 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       X = Xini;
     equation
       der(V) = In1.Q + Out1.Q;
-    
-      V * der(S.O2)  = In1.Q * In1.S.O2 + (Out1.Q - der(V)) * S.O2;
-      V * der(S.I)   = In1.Q * In1.S.I + (Out1.Q - der(V)) * S.I;
-      V * der(S.S)   = In1.Q * In1.S.S + (Out1.Q - der(V)) * S.S;
-      V * der(S.NH)  = In1.Q * In1.S.NH + (Out1.Q - der(V)) * S.NH;
-      V * der(S.N2)  = In1.Q * In1.S.N2 + (Out1.Q - der(V)) * S.N2;
-      V * der(S.NO)  = In1.Q * In1.S.NO + (Out1.Q - der(V)) * S.NO;
-      V * der(S.ALK) = In1.Q * In1.S.ALK + (Out1.Q - der(V)) * S.ALK;
-    
-      V * der(X.I)   = In1.Q * In1.X.I + (Out1.Q - der(V)) * X.I;
-      V * der(X.S)   = In1.Q * In1.X.S + (Out1.Q - der(V)) * X.S;
-      V * der(X.H)   = In1.Q * In1.X.H + (Out1.Q - der(V)) * X.H;
-      V * der(X.STO) = In1.Q * In1.X.STO + (Out1.Q - der(V)) * X.STO;
-      V * der(X.A)   = In1.Q * In1.X.A + (Out1.Q - der(V)) * X.A;
-      V * der(X.SS)  = In1.Q * In1.X.SS + (Out1.Q - der(V)) * X.SS;
-    
-    
+      V*der(S.O2) = In1.Q*In1.S.O2 + (Out1.Q - der(V))*S.O2;
+      V*der(S.I) = In1.Q*In1.S.I + (Out1.Q - der(V))*S.I;
+      V*der(S.S) = In1.Q*In1.S.S + (Out1.Q - der(V))*S.S;
+      V*der(S.NH) = In1.Q*In1.S.NH + (Out1.Q - der(V))*S.NH;
+      V*der(S.N2) = In1.Q*In1.S.N2 + (Out1.Q - der(V))*S.N2;
+      V*der(S.NO) = In1.Q*In1.S.NO + (Out1.Q - der(V))*S.NO;
+      V*der(S.ALK) = In1.Q*In1.S.ALK + (Out1.Q - der(V))*S.ALK;
+      V*der(X.I) = In1.Q*In1.X.I + (Out1.Q - der(V))*X.I;
+      V*der(X.S) = In1.Q*In1.X.S + (Out1.Q - der(V))*X.S;
+      V*der(X.H) = In1.Q*In1.X.H + (Out1.Q - der(V))*X.H;
+      V*der(X.STO) = In1.Q*In1.X.STO + (Out1.Q - der(V))*X.STO;
+      V*der(X.A) = In1.Q*In1.X.A + (Out1.Q - der(V))*X.A;
+      V*der(X.SS) = In1.Q*In1.X.SS + (Out1.Q - der(V))*X.SS;
       Out1.T = In1.T;
       Out1.S = S;
       Out1.X = X;
@@ -1083,22 +1103,19 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Out2.T = In1.T;
       Out1.S = In1.S;
       Out2.S = In1.S;
-    
-      Out1.X.I   = fns * In1.X.I;
-      Out1.X.S   = fns * In1.X.S;
-      Out1.X.H   = fns * In1.X.H;
-      Out1.X.STO = fns * In1.X.STO;
-      Out1.X.A   = fns * In1.X.A;
-      Out1.X.SS  = fns * In1.X.SS;
-    
+      Out1.X.I = fns*In1.X.I;
+      Out1.X.S = fns*In1.X.S;
+      Out1.X.H = fns*In1.X.H;
+      Out1.X.STO = fns*In1.X.STO;
+      Out1.X.A = fns*In1.X.A;
+      Out1.X.SS = fns*In1.X.SS;
       Out2.S = In1.S;
-      Out2.Q * Out2.X.I   + In1.Q * In1.X.I   + Out1.Q * Out1.X.I = 0;
-      Out2.Q * Out2.X.S   + In1.Q * In1.X.S   + Out1.Q * Out1.X.S = 0;
-      Out2.Q * Out2.X.H   + In1.Q * In1.X.H   + Out1.Q * Out1.X.H = 0;
-      Out2.Q * Out2.X.STO + In1.Q * In1.X.STO + Out1.Q * Out1.X.STO = 0;
-      Out2.Q * Out2.X.A   + In1.Q * In1.X.A   + Out1.Q * Out1.X.A = 0;
-      Out2.Q * Out2.X.SS  + In1.Q * In1.X.SS  + Out1.Q * Out1.X.SS = 0;
-     
+      Out2.Q*Out2.X.I + In1.Q*In1.X.I + Out1.Q*Out1.X.I = 0;
+      Out2.Q*Out2.X.S + In1.Q*In1.X.S + Out1.Q*Out1.X.S = 0;
+      Out2.Q*Out2.X.H + In1.Q*In1.X.H + Out1.Q*Out1.X.H = 0;
+      Out2.Q*Out2.X.STO + In1.Q*In1.X.STO + Out1.Q*Out1.X.STO = 0;
+      Out2.Q*Out2.X.A + In1.Q*In1.X.A + Out1.Q*Out1.X.A = 0;
+      Out2.Q*Out2.X.SS + In1.Q*In1.X.SS + Out1.Q*Out1.X.SS = 0;
       annotation(
         defaultComponentName = "Separator",
         Documentation(info = "<html>
@@ -1138,19 +1155,19 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Out1.T = In1.T;
       Out2.T = In1.T;
       Out1.S = In1.S;
-      Out1.X.I   = fns * In1.X.I;
-      Out1.X.S   = fns * In1.X.S;
-      Out1.X.H   = fns * In1.X.H;
-      Out1.X.STO = fns * In1.X.STO;
-      Out1.X.A   = fns * In1.X.A;
-      Out1.X.SS  = fns * In1.X.SS;
+      Out1.X.I = fns*In1.X.I;
+      Out1.X.S = fns*In1.X.S;
+      Out1.X.H = fns*In1.X.H;
+      Out1.X.STO = fns*In1.X.STO;
+      Out1.X.A = fns*In1.X.A;
+      Out1.X.SS = fns*In1.X.SS;
       Out2.S = In1.S;
-      Out2.Q * Out2.X.I   + In1.Q * In1.X.I   + Out1.Q * Out1.X.I = 0;
-      Out2.Q * Out2.X.S   + In1.Q * In1.X.S   + Out1.Q * Out1.X.S = 0;
-      Out2.Q * Out2.X.H   + In1.Q * In1.X.H   + Out1.Q * Out1.X.H = 0;
-      Out2.Q * Out2.X.STO + In1.Q * In1.X.STO + Out1.Q * Out1.X.STO = 0;
-      Out2.Q * Out2.X.A   + In1.Q * In1.X.A   + Out1.Q * Out1.X.A = 0;
-      Out2.Q * Out2.X.SS  + In1.Q * In1.X.SS  + Out1.Q * Out1.X.SS = 0;
+      Out2.Q*Out2.X.I + In1.Q*In1.X.I + Out1.Q*Out1.X.I = 0;
+      Out2.Q*Out2.X.S + In1.Q*In1.X.S + Out1.Q*Out1.X.S = 0;
+      Out2.Q*Out2.X.H + In1.Q*In1.X.H + Out1.Q*Out1.X.H = 0;
+      Out2.Q*Out2.X.STO + In1.Q*In1.X.STO + Out1.Q*Out1.X.STO = 0;
+      Out2.Q*Out2.X.A + In1.Q*In1.X.A + Out1.Q*Out1.X.A = 0;
+      Out2.Q*Out2.X.SS + In1.Q*In1.X.SS + Out1.Q*Out1.X.SS = 0;
       Out2WWSensor.Value.TSS = Out2.X.SS;
       Out2WWSensor.Value.O2 = Out2.S.O2;
       Out2WWSensor.Value.S = Out2.S.S;
@@ -1193,29 +1210,26 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       S = In1.S;
       X = In1.X;
       0 = Out1.Q + Out2.Q + In1.Q;
-      HRT_h = V / In1.Q * 24.0;
-      n_COD = 2.7 * (2 * log(HRT_h) + 9) / 100;
-      H = n_COD * COD / TSS * 0.75;
+      HRT_h = V/In1.Q*24.0;
+      n_COD = 2.7*(2*log(HRT_h) + 9)/100;
+      H = n_COD*COD/TSS*0.75;
       n_X = if H > 0.95 then 0.95 else if H < 0.05 then 0.05 else H;
       Out1.T = In1.T;
       Out2.T = In1.T;
-    
       Out1.S = In1.S;
-      Out1.X.I   = (1 - n_X) * In1.X.I;
-      Out1.X.S   = (1 - n_X) * In1.X.S;
-      Out1.X.H   = (1 - n_X) * In1.X.H;
-      Out1.X.STO = (1 - n_X) * In1.X.STO;
-      Out1.X.A   = (1 - n_X) * In1.X.A;
-      Out1.X.SS  = (1 - n_X) * In1.X.SS;
-    
+      Out1.X.I = (1 - n_X)*In1.X.I;
+      Out1.X.S = (1 - n_X)*In1.X.S;
+      Out1.X.H = (1 - n_X)*In1.X.H;
+      Out1.X.STO = (1 - n_X)*In1.X.STO;
+      Out1.X.A = (1 - n_X)*In1.X.A;
+      Out1.X.SS = (1 - n_X)*In1.X.SS;
       Out2.S = In1.S;
-      Out2.Q * Out2.X.I   + In1.Q * In1.X.I   + Out1.Q * Out1.X.I = 0;
-      Out2.Q * Out2.X.S   + In1.Q * In1.X.S   + Out1.Q * Out1.X.S = 0;
-      Out2.Q * Out2.X.H   + In1.Q * In1.X.H   + Out1.Q * Out1.X.H = 0;
-      Out2.Q * Out2.X.STO + In1.Q * In1.X.STO + Out1.Q * Out1.X.STO = 0;
-      Out2.Q * Out2.X.A   + In1.Q * In1.X.A   + Out1.Q * Out1.X.A = 0;
-      Out2.Q * Out2.X.SS  + In1.Q * In1.X.SS  + Out1.Q * Out1.X.SS = 0;
-    
+      Out2.Q*Out2.X.I + In1.Q*In1.X.I + Out1.Q*Out1.X.I = 0;
+      Out2.Q*Out2.X.S + In1.Q*In1.X.S + Out1.Q*Out1.X.S = 0;
+      Out2.Q*Out2.X.H + In1.Q*In1.X.H + Out1.Q*Out1.X.H = 0;
+      Out2.Q*Out2.X.STO + In1.Q*In1.X.STO + Out1.Q*Out1.X.STO = 0;
+      Out2.Q*Out2.X.A + In1.Q*In1.X.A + Out1.Q*Out1.X.A = 0;
+      Out2.Q*Out2.X.SS + In1.Q*In1.X.SS + Out1.Q*Out1.X.SS = 0;
       Out2WWSensor.Value.O2 = Out2.S.O2;
       Out2WWSensor.Value.S = Out2.S.S;
       Out2WWSensor.Value.NH = Out2.S.NH;
@@ -1260,10 +1274,10 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Placement(visible = true, transformation(origin = {-2, -96}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-1, -98}, extent = {{-13, -12}, {13, 12}}, rotation = 0)));
     equation
       connect(In1, T[1].In1);
-      if N > 1 then 
+      if N > 1 then
         for i in 1:N - 1 loop
           connect(T[i].Out1, T[i + 1].In1);
-        end for; 
+        end for;
       end if;
       connect(T[N].Out1, S.In1);
       connect(S.Out1, Out1);
@@ -1294,7 +1308,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       extends OpenWasteWater.Icons.preclar1;
       parameter Real V = 600 "Volume of the SCT";
       parameter Integer N = 6;
-      Tank T[N](each V = V / N);
+      Tank T[N](each V = V/N);
       PreThick PST(V = V);
       OpenWasteWater.ASM3.InPipe In1 annotation(
         Placement(visible = true, transformation(origin = {-100, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-99, 4}, extent = {{-13, -14}, {13, 14}}, rotation = 0)));
@@ -1305,16 +1319,14 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       OpenWasteWater.ASM3.TechUnits.outWWSensor OutTSSWWSensor annotation(
         Placement(visible = true, transformation(origin = {62, -94}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {62, -92}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
-      connect(In1, T[1].In1) annotation(Line);
-    
-      if N > 1 then 
+      connect(In1, T[1].In1) annotation(
+        Line);
+      if N > 1 then
         for i in 1:N - 1 loop
           connect(T[i].Out1, T[i + 1].In1);
-        end for; 
+        end for;
       end if;
-    
       connect(T[N].Out1, PST.In1);
-    
       connect(PST.Out1, Out1);
       connect(PST.Out2, Out2);
       connect(PST.Out2WWSensor, OutTSSWWSensor);
@@ -1377,15 +1389,15 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     partial model ClarZone
       parameter Real A = 1500 "m2";
       parameter Real z = 0.5 "m";
-      parameter Soluble Sini(O2=4.0, I=30, S=1.15, NH=0.2, N2 = 10.0, NO=16.9, ALK=3.54);
+      parameter Soluble Sini(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 10.0, NO = 16.9, ALK = 3.54);
       Real Xs;
       Real Xn;
       Soluble S;
       Real V;
       Real TSS;
     equation
-      V = A * z;
-      TSS = 0.75 * (Xs + Xn);
+      V = A*z;
+      TSS = 0.75*(Xs + Xn);
     end ClarZone;
 
     model InputPart
@@ -1406,20 +1418,20 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Out1.T = In1.T;
       Out2.T = In1.T;
       Xtot = In1.X.SS;
-      frac[1] = In1.X.I   / Xtot;
-      frac[2] = In1.X.S   / Xtot;
-      frac[3] = In1.X.H   / Xtot;
-      frac[4] = In1.X.STO / Xtot;
-      frac[5] = In1.X.A   / Xtot;
-      der(Xs) = In1.Q / V * ((1 - fns) * Xtot - Xs) + (min(fJS(Xs), fJS(iXup.Xs)) - min(fJS(Xs), fJS(iXdown.Xs))) / z;
-      der(Xn) = In1.Q / V * (fns * Xtot - Xn);
-      der(S.O2)  = In1.Q / V * (In1.S.O2  - S.O2);
-      der(S.I)   = In1.Q / V * (In1.S.I   - S.I);
-      der(S.S)   = In1.Q / V * (In1.S.S   - S.S);
-      der(S.NH)  = In1.Q / V * (In1.S.NH  - S.NH);
-      der(S.N2)  = In1.Q / V * (In1.S.N2  - S.N2);
-      der(S.NO)  = In1.Q / V * (In1.S.NO  - S.NO);
-      der(S.ALK) = In1.Q / V * (In1.S.ALK - S.ALK);
+      frac[1] = In1.X.I/Xtot;
+      frac[2] = In1.X.S/Xtot;
+      frac[3] = In1.X.H/Xtot;
+      frac[4] = In1.X.STO/Xtot;
+      frac[5] = In1.X.A/Xtot;
+      der(Xs) = In1.Q/V*((1 - fns)*Xtot - Xs) + (min(fJS(Xs), fJS(iXup.Xs)) - min(fJS(Xs), fJS(iXdown.Xs)))/z;
+      der(Xn) = In1.Q/V*(fns*Xtot - Xn);
+      der(S.O2) = In1.Q/V*(In1.S.O2 - S.O2);
+      der(S.I) = In1.Q/V*(In1.S.I - S.I);
+      der(S.S) = In1.Q/V*(In1.S.S - S.S);
+      der(S.NH) = In1.Q/V*(In1.S.NH - S.NH);
+      der(S.N2) = In1.Q/V*(In1.S.N2 - S.N2);
+      der(S.NO) = In1.Q/V*(In1.S.NO - S.NO);
+      der(S.ALK) = In1.Q/V*(In1.S.ALK - S.ALK);
       Out1.S = S;
       Out1.Xn = Xn;
       Out1.Xs = Xs;
@@ -1448,23 +1460,23 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       0 = Out1.Q + In1.Q;
       Out1.T = In1.T;
       frac = iT.relation;
-      der(Xs) = In1.Q / V * (In1.Xs - Xs) - min(fJS(In1.Xs), fJS(Xs)) / z;
-      der(Xn) = In1.Q / V * (In1.Xn - Xn);
-      der(S.O2)  = In1.Q / V * (In1.S.O2  - S.O2);
-      der(S.I)   = In1.Q / V * (In1.S.I   - S.I);
-      der(S.S)   = In1.Q / V * (In1.S.S   - S.S);
-      der(S.NH)  = In1.Q / V * (In1.S.NH  - S.NH);
-      der(S.N2)  = In1.Q / V * (In1.S.N2  - S.N2);
-      der(S.NO)  = In1.Q / V * (In1.S.NO  - S.NO);
-      der(S.ALK) = In1.Q / V * (In1.S.ALK - S.ALK);
+      der(Xs) = In1.Q/V*(In1.Xs - Xs) - min(fJS(In1.Xs), fJS(Xs))/z;
+      der(Xn) = In1.Q/V*(In1.Xn - Xn);
+      der(S.O2) = In1.Q/V*(In1.S.O2 - S.O2);
+      der(S.I) = In1.Q/V*(In1.S.I - S.I);
+      der(S.S) = In1.Q/V*(In1.S.S - S.S);
+      der(S.NH) = In1.Q/V*(In1.S.NH - S.NH);
+      der(S.N2) = In1.Q/V*(In1.S.N2 - S.N2);
+      der(S.NO) = In1.Q/V*(In1.S.NO - S.NO);
+      der(S.ALK) = In1.Q/V*(In1.S.ALK - S.ALK);
       Xtot = Xs + Xn;
       Out1.S = S;
-      Out1.X.I   = Xtot * frac[1];
-      Out1.X.S   = Xtot * frac[2];
-      Out1.X.H   = Xtot * frac[3];
-      Out1.X.STO = Xtot * frac[4];
-      Out1.X.A   = Xtot * frac[5];
-      Out1.X.SS  = Xtot;
+      Out1.X.I = Xtot*frac[1];
+      Out1.X.S = Xtot*frac[2];
+      Out1.X.H = Xtot*frac[3];
+      Out1.X.STO = Xtot*frac[4];
+      Out1.X.A = Xtot*frac[5];
+      Out1.X.SS = Xtot;
       oXdown.Xs = Xs;
     end TopPart;
 
@@ -1481,15 +1493,15 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     equation
       0 = In1.Q + Out1.Q;
       Out1.T = In1.T;
-      der(Xs) = In1.Q / V * (In1.Xs - Xs) + (min(fJS(iXup.Xs), fJS(Xs)) - min(fJS(Xs), fJS(In1.Xs))) / z;
-      der(Xn) = In1.Q / V * (In1.Xn - Xn);
-      der(S.O2)  = In1.Q / V * (In1.S.O2  - S.O2);
-      der(S.I)   = In1.Q / V * (In1.S.I   - S.I);
-      der(S.S)   = In1.Q / V * (In1.S.S   - S.S);
-      der(S.NH)  = In1.Q / V * (In1.S.NH  - S.NH);
-      der(S.N2)  = In1.Q / V * (In1.S.N2  - S.N2);
-      der(S.NO)  = In1.Q / V * (In1.S.NO  - S.NO);
-      der(S.ALK) = In1.Q / V * (In1.S.ALK - S.ALK);
+      der(Xs) = In1.Q/V*(In1.Xs - Xs) + (min(fJS(iXup.Xs), fJS(Xs)) - min(fJS(Xs), fJS(In1.Xs)))/z;
+      der(Xn) = In1.Q/V*(In1.Xn - Xn);
+      der(S.O2) = In1.Q/V*(In1.S.O2 - S.O2);
+      der(S.I) = In1.Q/V*(In1.S.I - S.I);
+      der(S.S) = In1.Q/V*(In1.S.S - S.S);
+      der(S.NH) = In1.Q/V*(In1.S.NH - S.NH);
+      der(S.N2) = In1.Q/V*(In1.S.N2 - S.N2);
+      der(S.NO) = In1.Q/V*(In1.S.NO - S.NO);
+      der(S.ALK) = In1.Q/V*(In1.S.ALK - S.ALK);
       Out1.S = S;
       Out1.Xn = Xn;
       Out1.Xs = Xs;
@@ -1509,15 +1521,15 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     equation
       0 = In1.Q + Out1.Q;
       In1.T = Out1.T;
-      der(Xs) = In1.Q / V * (In1.Xs - Xs) + (min(fJS(In1.Xs), fJS(Xs)) - min(fJS(Xs), fJS(iXdown.Xs))) / z;
-      der(Xn) = In1.Q / V * (In1.Xn - Xn);
-      der(S.O2)  = In1.Q / V * (In1.S.O2  - S.O2);
-      der(S.I)   = In1.Q / V * (In1.S.I   - S.I);
-      der(S.S)   = In1.Q / V * (In1.S.S   - S.S);
-      der(S.NH)  = In1.Q / V * (In1.S.NH  - S.NH);
-      der(S.N2)  = In1.Q / V * (In1.S.N2  - S.N2);
-      der(S.NO)  = In1.Q / V * (In1.S.NO  - S.NO);
-      der(S.ALK) = In1.Q / V * (In1.S.ALK - S.ALK);
+      der(Xs) = In1.Q/V*(In1.Xs - Xs) + (min(fJS(In1.Xs), fJS(Xs)) - min(fJS(Xs), fJS(iXdown.Xs)))/z;
+      der(Xn) = In1.Q/V*(In1.Xn - Xn);
+      der(S.O2) = In1.Q/V*(In1.S.O2 - S.O2);
+      der(S.I) = In1.Q/V*(In1.S.I - S.I);
+      der(S.S) = In1.Q/V*(In1.S.S - S.S);
+      der(S.NH) = In1.Q/V*(In1.S.NH - S.NH);
+      der(S.N2) = In1.Q/V*(In1.S.N2 - S.N2);
+      der(S.NO) = In1.Q/V*(In1.S.NO - S.NO);
+      der(S.ALK) = In1.Q/V*(In1.S.ALK - S.ALK);
       Out1.S = S;
       Out1.Xn = Xn;
       Out1.Xs = Xs;
@@ -1540,23 +1552,23 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       0 = In1.Q + Out1.Q;
       In1.T = Out1.T;
       frac = iB.relation;
-      der(Xs) = In1.Q / V * (In1.Xs - Xs) + min(fJS(In1.Xs), fJS(Xs)) / z;
-      der(Xn) = In1.Q / V * (In1.Xn - Xn);
-      der(S.O2)  = In1.Q / V * (In1.S.O2  - S.O2);
-      der(S.I)   = In1.Q / V * (In1.S.I   - S.I);
-      der(S.S)   = In1.Q / V * (In1.S.S   - S.S);
-      der(S.NH)  = In1.Q / V * (In1.S.NH  - S.NH);
-      der(S.N2)  = In1.Q / V * (In1.S.N2  - S.N2);
-      der(S.NO)  = In1.Q / V * (In1.S.NO  - S.NO);
-      der(S.ALK) = In1.Q / V * (In1.S.ALK - S.ALK);
+      der(Xs) = In1.Q/V*(In1.Xs - Xs) + min(fJS(In1.Xs), fJS(Xs))/z;
+      der(Xn) = In1.Q/V*(In1.Xn - Xn);
+      der(S.O2) = In1.Q/V*(In1.S.O2 - S.O2);
+      der(S.I) = In1.Q/V*(In1.S.I - S.I);
+      der(S.S) = In1.Q/V*(In1.S.S - S.S);
+      der(S.NH) = In1.Q/V*(In1.S.NH - S.NH);
+      der(S.N2) = In1.Q/V*(In1.S.N2 - S.N2);
+      der(S.NO) = In1.Q/V*(In1.S.NO - S.NO);
+      der(S.ALK) = In1.Q/V*(In1.S.ALK - S.ALK);
       Xtot = Xs + Xn;
       Out1.S = S;
-      Out1.X.I   = Xtot * frac[1];
-      Out1.X.S   = Xtot * frac[2];
-      Out1.X.H   = Xtot * frac[3];
-      Out1.X.STO = Xtot * frac[4];
-      Out1.X.A   = Xtot * frac[5];
-      Out1.X.SS  = Xtot;
+      Out1.X.I = Xtot*frac[1];
+      Out1.X.S = Xtot*frac[2];
+      Out1.X.H = Xtot*frac[3];
+      Out1.X.STO = Xtot*frac[4];
+      Out1.X.A = Xtot*frac[5];
+      Out1.X.SS = Xtot;
       oXup.Xs = Xs;
     end BottomPart;
 
@@ -1636,15 +1648,15 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Placement(visible = true, transformation(origin = {-90, 88}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.Mixer3 M1 annotation(
         Placement(visible = true, transformation(origin = {-64, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.DenitrificationTank DN1(Sini = Soluble(O2=1.0, I=30, S=1.15, NH=30.2, N2=0.9,  NO=8.9, ALK=4.54), V_R = 1500, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.DenitrificationTank DN1(Sini = Soluble(O2 = 1.0, I = 30, S = 1.15, NH = 30.2, N2 = 0.9, NO = 8.9, ALK = 4.54), V_R = 1500, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {-38, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.DenitrificationTank DN2(Sini=Soluble(O2=1.0, I=30, S=1.15, NH=30.2, N2=0.9, NO=1.9, ALK=5.54), V_R = 1500, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.DenitrificationTank DN2(Sini = Soluble(O2 = 1.0, I = 30, S = 1.15, NH = 30.2, N2 = 0.9, NO = 1.9, ALK = 5.54), V_R = 1500, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {-12, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.NitrificationTank N1(Sini=Soluble(O2=4.0, I=30, S=1.15, NH=10.2, N2=5.9, NO=16.9, ALK=4.54), V_R = 2000, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.NitrificationTank N1(Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 10.2, N2 = 5.9, NO = 16.9, ALK = 4.54), V_R = 2000, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {16, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.NitrificationTank N2(Sini=Soluble(O2=4.0, I=30, S=1.15, NH=5.2, N2=10.9, NO=16.9, ALK=3.54), V_R = 2000, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.NitrificationTank N2(Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 5.2, N2 = 10.9, NO = 16.9, ALK = 3.54), V_R = 2000, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {42, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.NitrificationTank N3(Sini=Soluble(O2=4.0, I=30, S=1.15, NH=0.2, N2=15.9, NO=16.9, ALK=3.54), V_R = 2000, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.NitrificationTank N3(Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 15.9, NO = 16.9, ALK = 3.54), V_R = 2000, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {66, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
         Placement(visible = true, transformation(origin = {16, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -1832,27 +1844,27 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     end WWTP_ADM;
 
     model Test
-  OpenWasteWater.ASM3.Inflow Inflow3(Inf_File = "/home/awwjb/Git/OpenWasteWater/Resources/ASM3/Inf_Raw_strm.txt")  annotation(
+      OpenWasteWater.ASM3.Inflow Inflow3(Inf_File = "/home/awwjb/Git/OpenWasteWater/Resources/ASM3/Inf_Raw_strm.txt") annotation(
         Placement(visible = true, transformation(origin = {-88, 74}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.Sub_WWTP_Modells.WWTP_Part WWTP_Part3 annotation(
+      OpenWasteWater.ASM3.Sub_WWTP_Modells.WWTP_Part WWTP_Part3 annotation(
         Placement(visible = true, transformation(origin = {20, 30}, extent = {{-34, -34}, {34, 34}}, rotation = 0)));
-  Effluent SinkWater3 annotation(
+      Effluent SinkWater3 annotation(
         Placement(visible = true, transformation(origin = {88, 42}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  WasteSludge WasteSludge3 annotation(
+      WasteSludge WasteSludge3 annotation(
         Placement(visible = true, transformation(origin = {86, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.SedTank.PreClar Vorklaerung annotation(
+      OpenWasteWater.ASM3.SedTank.PreClar Vorklaerung annotation(
         Placement(visible = true, transformation(origin = {-58, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TechUnits.SludgeControl PrimaerySludgeControl annotation(
+      TechUnits.SludgeControl PrimaerySludgeControl annotation(
         Placement(visible = true, transformation(origin = {-36, -12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.TechUnits.Pump PS_Pump annotation(
+      OpenWasteWater.ASM3.TechUnits.Pump PS_Pump annotation(
         Placement(visible = true, transformation(origin = {-56, -46}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
-  OpenWasteWater.ASM3.WasteSludge PS_Sink annotation(
+      OpenWasteWater.ASM3.WasteSludge PS_Sink annotation(
         Placement(visible = true, transformation(origin = {76, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  ADM.outflow_ASM3 outflow_ASM annotation(
+      ADM.outflow_ASM3 outflow_ASM annotation(
         Placement(visible = true, transformation(origin = {48, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ADM.inflow_ASM3 inflow_ADM1 annotation(
+      OpenWasteWater.ADM.inflow_ASM3 inflow_ADM1 annotation(
         Placement(visible = true, transformation(origin = {-22, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  ADM.adm_models.ADM1 adm1 annotation(
+      ADM.adm_models.ADM1 adm1 annotation(
         Placement(visible = true, transformation(origin = {20, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
       connect(Inflow3.OutSensor1, WWTP_Part3.InfWWSensor) annotation(
@@ -1875,9 +1887,9 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Line(points = {{-52, -56}, {-54, -56}, {-54, -64}, {-29, -64}}));
       connect(outflow_ASM.Out1, PS_Sink.In1) annotation(
         Line(points = {{54, -64}, {66, -64}}));
-  connect(inflow_ADM1.Out1, adm1.In1) annotation(
+      connect(inflow_ADM1.Out1, adm1.In1) annotation(
         Line(points = {{-16, -64}, {12, -64}}, color = {233, 185, 110}));
-  connect(adm1.Out1, outflow_ASM.In1) annotation(
+      connect(adm1.Out1, outflow_ASM.In1) annotation(
         Line(points = {{30, -64}, {42, -64}}, color = {233, 185, 110}));
       annotation(
         Icon(coordinateSystem(initialScale = 0.5)),
@@ -1921,7 +1933,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Placement(visible = true, transformation(origin = {28, -84}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       Mixer3 M1 annotation(
         Placement(visible = true, transformation(origin = {-10, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TechUnits.SetQ SetQ_PS(Q = 30.0)  annotation(
+      TechUnits.SetQ SetQ_PS(Q = 30.0) annotation(
         Placement(visible = true, transformation(origin = {-52, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
       connect(Inflow1.Out1, Vorklaerung.In1) annotation(
@@ -1970,35 +1982,26 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Line(points = {{-74, 86}, {24, 86}, {24, 84}}, color = {78, 154, 6}));
       connect(wWTP_Part1.Out1, Eff.In1) annotation(
         Line(points = {{64, 62}, {76, 62}, {76, 26}, {80, 26}, {80, 26}}));
-  connect(SetQ_PS.OutQ1, PS_Pump.Qset) annotation(
+      connect(SetQ_PS.OutQ1, PS_Pump.Qset) annotation(
         Line(points = {{-62, 36}, {-78, 36}, {-78, 24}}, color = {78, 154, 6}));
       annotation(
         experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-6, Interval = 0.02));
     end Test_WWTP_ADM;
-
-
-
   end WWTP_Examples;
-
-
-
-
-
 
   package Sub_WWTP_Modells
     model WWTP_Part
-    
       OpenWasteWater.ASM3.Mixer3 M1 annotation(
         Placement(visible = true, transformation(origin = {-64, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.DenitrificationTank DN1(Sini = Soluble(O2=1.0, I=30, S=1.15, NH=30.2, N2=0.9,  NO=8.9, ALK=4.54), V_R = 1500, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.DenitrificationTank DN1(Sini = Soluble(O2 = 1.0, I = 30, S = 1.15, NH = 30.2, N2 = 0.9, NO = 8.9, ALK = 4.54), V_R = 1500, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {-38, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.DenitrificationTank DN2(Sini=Soluble(O2=1.0, I=30, S=1.15, NH=30.2, N2=0.9, NO=1.9, ALK=5.54), V_R = 1500, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.DenitrificationTank DN2(Sini = Soluble(O2 = 1.0, I = 30, S = 1.15, NH = 30.2, N2 = 0.9, NO = 1.9, ALK = 5.54), V_R = 1500, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {-12, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.NitrificationTank N1(Sini=Soluble(O2=4.0, I=30, S=1.15, NH=10.2, N2=5.9, NO=16.9, ALK=4.54), V_R = 2000, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.NitrificationTank N1(Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 10.2, N2 = 5.9, NO = 16.9, ALK = 4.54), V_R = 2000, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {16, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.NitrificationTank N2(Sini=Soluble(O2=4.0, I=30, S=1.15, NH=5.2, N2=10.9, NO=16.9, ALK=3.54), V_R = 2000, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.NitrificationTank N2(Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 5.2, N2 = 10.9, NO = 16.9, ALK = 3.54), V_R = 2000, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {42, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.NitrificationTank N3(Sini=Soluble(O2=4.0, I=30, S=1.15, NH=0.2, N2=15.9, NO=16.9, ALK=3.54), V_R = 2000, Xini=Particulate(I=78.0, S=37.4, H=1216.0, A=136.0, STO=208.0, SS=2000.55)) annotation(
+      OpenWasteWater.ASM3.NitrificationTank N3(Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 15.9, NO = 16.9, ALK = 3.54), V_R = 2000, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
         Placement(visible = true, transformation(origin = {66, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
         Placement(visible = true, transformation(origin = {16, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -2026,9 +2029,9 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Placement(visible = true, transformation(origin = {98, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {98, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM1.InPipe In1 annotation(
         Placement(visible = true, transformation(origin = {-106, -2}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  TechUnits.inWWSensor InfWWSensor annotation(
+      TechUnits.inWWSensor InfWWSensor annotation(
         Placement(visible = true, transformation(origin = {-100, 92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 92}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  SecClar.SCL scl annotation(
+      SecClar.SCL scl annotation(
         Placement(visible = true, transformation(origin = {4, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
       connect(SensorInf.S_Out1, PLS.InSensorInf) annotation(
@@ -2087,15 +2090,14 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Line(points = {{-106, -2}, {-96, -2}, {-96, 82}, {-74, 82}}));
       connect(InfWWSensor, SensorInf.S_In1) annotation(
         Line(points = {{-100, 92}, {-52, 92}}));
-  connect(S1.Out1, scl.In1) annotation(
+      connect(S1.Out1, scl.In1) annotation(
         Line(points = {{-30, 32}, {-42, 32}, {-42, -14}, {-6, -14}}));
-  connect(scl.Out1, Out1) annotation(
+      connect(scl.Out1, Out1) annotation(
         Line(points = {{14, -10}, {66, -10}, {66, -16}, {96, -16}}));
-  connect(scl.Out2, S2.In1) annotation(
+      connect(scl.Out2, S2.In1) annotation(
         Line(points = {{4, -26}, {4, -36}}));
       annotation(
         experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02));
-    
     end WWTP_Part;
 
     model SludgeThickening
