@@ -1953,7 +1953,7 @@ package ASM1 "Component models for the Activated Sludge Model No.1"
     end WWTP_ADM;
 
     model Test
-      OpenWasteWater.ASM1.Inflow Inf1(Inf_File = "OpenWasteWater/Resources/ASM1/Inf_strm.txt") annotation(
+      OpenWasteWater.ASM1.Inflow Inf1(Inf_File = "C:/Users/DanaP2M/Documents/GitHub/OpenWasteWater/Resources/ASM1/Inf_Raw_strm.txt") annotation(
         Placement(visible = true, transformation(origin = {-70, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM1.Effluent Effluent1 annotation(
         Placement(visible = true, transformation(origin = {84, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
