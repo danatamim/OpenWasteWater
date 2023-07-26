@@ -19,10 +19,13 @@ Inflow
 Effluent
 WasteSludge
 NitrificationTank
+NitriCascade
 DenitrificationTank
+DeniCascade
 ASM3_CSTR
 TechUnits
 SedTank
 SecClar
 WWTP_Examples
 Sub_WWTP_Modells
+Scenarios

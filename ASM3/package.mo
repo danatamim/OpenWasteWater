@@ -335,30 +335,31 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
 
   model Mixer3
     extends OpenWasteWater.Icons.mixer3;
-    Mixer2 M1 annotation(
-      Placement(visible = true, transformation(origin = {-26, 40}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.Mixer2 M1 annotation(
+      Placement(visible = true, transformation(origin = {-26, 37}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.Mixer2 M2 annotation(
       Placement(visible = true, transformation(origin = {8, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.InPipe In1 annotation(
       Placement(visible = true, transformation(origin = {-100, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.InPipe In2 annotation(
-      Placement(visible = true, transformation(origin = {-98, -4}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-98, -4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Placement(visible = true, transformation(origin = {-99, -4}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-98, -4}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.InPipe In3 annotation(
       Placement(visible = true, transformation(origin = {-100, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, -46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OutPipe Out1 annotation(
       Placement(visible = true, transformation(origin = {96, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {96, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   equation
     connect(In2, M1.In2) annotation(
-      Line(points = {{-98, -4}, {-36, -4}, {-36, 38}}, color = {0, 0, 255}));
+      Line(points = {{-99, -4}, {-99, -0.5}, {-36, -0.5}, {-36, 39.5}}, color = {0, 0, 255}));
     connect(In3, M2.In2) annotation(
       Line(points = {{-100, -46}, {-2, -46}, {-2, 20}}, color = {0, 0, 255}));
     connect(In1, M1.In1) annotation(
-      Line(points = {{-100, 36}, {-68, 36}, {-68, 42}, {-36, 42}}, color = {0, 0, 255}));
+      Line(points = {{-100, 36}, {-68, 36}, {-68, 35.5}, {-36, 35.5}}, color = {0, 0, 255}));
     connect(M2.Out1, Out1) annotation(
-      Line(points = {{18, 22}, {90, 22}, {90, 0}, {96, 0}}));
+      Line(points = {{18, 22}, {97, 22}, {97, 0}, {96, 0}}));
     connect(M1.Out1, M2.In1) annotation(
-      Line(points = {{-16, 40}, {-2, 40}, {-2, 24.5}}));
-  end Mixer3;
+      Line(points = {{-16, 37.5}, {-16, 40}, {-2, 40}, {-2, 24.5}}));
+    annotation(
+      Diagram);end Mixer3;
 
   model Divider2
     extends OpenWasteWater.Icons.divider2;
@@ -370,7 +371,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Placement(visible = true, transformation(extent = {{90, 16}, {110, 36}}, rotation = 0), iconTransformation(origin = {90, 26}, extent = {{-12, -14}, {12, 14}}, rotation = 0)));
   equation
     0 = Out1.Q + Out2.Q + In1.Q;
-  // commented    Out1.Q = Out2.Q;
+// commented    Out1.Q = Out2.Q;
     Out1.T = In1.T;
     Out2.T = In1.T;
     Out1.S = In1.S;
@@ -400,8 +401,8 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     OpenWasteWater.ASM3.OutPipe Out3 annotation(
       Placement(visible = true, transformation(origin = {100, -35}, extent = {{9, 9}, {-9, -9}}, rotation = 0), iconTransformation(origin = {100, -35}, extent = {{9, 9}, {-9, -9}}, rotation = 0)));
   equation
-    0 = Out1.Q + In1.Q / 3.0;
-    0 = Out2.Q + In1.Q / 3.0;
+    0 = Out1.Q + In1.Q/3.0;
+    0 = Out2.Q + In1.Q/3.0;
     0 = Out1.Q + Out2.Q + Out3.Q + In1.Q;
     Out1.T = In1.T;
     Out2.T = In1.T;
@@ -584,6 +585,39 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     kLa = fkLa(Q = InQair.Q, V_R = V_R, H = H);
   end NitrificationTank;
 
+  model NitriCascade
+    extends OpenWasteWater.Icons.NitriCascade;
+    OpenWasteWater.ASM3.InPipe In1 annotation(
+      Placement(transformation(extent = {{-110, -10}, {-90, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.OutPipe Out1 annotation(
+      Placement(transformation(extent = {{90, -10}, {110, 10}}, rotation = 0)));
+   // OpenWasteWater.ASM3.TechUnits.outWWSensor OutSensor1 annotation(    Placement(visible = true, transformation(origin = {52, 92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {53, 53}, extent = {{-13, -13}, {13, 13}}, rotation = 0)));
+    parameter Integer N(min = 1) = 2;
+    parameter Real H = 6 "m";
+    parameter Real V_R = 1000 "m3";
+    parameter OpenWasteWater.ASM3.Soluble Sini(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 10.0, NO = 16.9, ALK = 3.54);
+    parameter OpenWasteWater.ASM3.Particulate Xini(I = 78.0, S = 37.4, H = 1016.0, STO = 200.0, A = 136.0, SS = 1208.0);
+    OpenWasteWater.ASM3.NitrificationTank NTank[N](each V_R = V_R/N, each H = H, each Sini = Sini, each Xini = Xini);
+    inQ InQair annotation(
+      Placement(visible = true, transformation(origin = {0, -96}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -96}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    outQ OutQair;
+  equation
+    OutQair.Q = InQair.Q/N;
+    connect(In1, NTank[1].In1);
+    connect(OutQair, NTank[1].InQair);
+    if N > 1 then
+      for i in 1:N - 1 loop
+        connect(NTank[i].Out1, NTank[i + 1].In1);
+        connect(OutQair, NTank[i + 1].InQair);
+      end for;
+    end if;
+    connect(NTank[N].Out1, Out1);
+    connect(OutQair, NTank[N].InQair);
+   // connect(NTank[N].OutSensor1, OutSensor1);
+    annotation(
+      Diagram(coordinateSystem(extent = {{-130, -100}, {100, 100}})));
+  end NitriCascade;
+
   model DenitrificationTank
     extends OpenWasteWater.Icons.deni;
     parameter Real kkLa = 2.0 "1/d  (for deni tanks 2 - 4 1/d)";
@@ -593,6 +627,33 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     annotation(
       Diagram);
   end DenitrificationTank;
+
+  model DeniCascade
+    extends OpenWasteWater.Icons.DeniCascade;
+    OpenWasteWater.ASM3.InPipe In1 annotation(
+      Placement(transformation(extent = {{-110, -10}, {-90, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.OutPipe Out1 annotation(
+      Placement(transformation(extent = {{90, -10}, {110, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.TechUnits.outWWSensor OutSensor1 annotation(
+      Placement(visible = true, transformation(origin = {52, 92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {53, 53}, extent = {{-13, -13}, {13, 13}}, rotation = 0)));
+    parameter Integer N(min = 1) = 2;
+    parameter Real V_R = 1000 "m3";
+    parameter Real kkLa = 1 "1/d";
+    parameter OpenWasteWater.ASM3.Soluble Sini(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 10.0, NO = 16.9, ALK = 3.54);
+    parameter OpenWasteWater.ASM3.Particulate Xini(I = 78.0, S = 37.4, H = 1016.0, STO = 200.0, A = 136.0, SS = 1208.0);
+    OpenWasteWater.ASM3.DenitrificationTank DNTank[N](each V_R = V_R/N, each kkLa = kkLa, each Sini = Sini, each Xini = Xini);
+  equation
+    connect(In1, DNTank[1].In1);
+    if N > 1 then
+      for i in 1:N - 1 loop
+        connect(DNTank[i].Out1, DNTank[i + 1].In1);
+      end for;
+    end if;
+    connect(DNTank[N].Out1, Out1);
+    connect(DNTank[N].OutSensor1, OutSensor1);
+    annotation(
+      Diagram(coordinateSystem(extent = {{-130, -100}, {100, 100}})));
+  end DeniCascade;
 
   partial model ASM3_CSTR
     OpenWasteWater.ASM3.InPipe In1 annotation(
@@ -778,22 +839,22 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
 
     model Pump
       extends OpenWasteWater.Icons.pump;
-    /*  parameter Real Qmax = 70000 "maximum performance, m3/d";
+      parameter Real Qmax = 70000 "maximum performance, m3/d";
       parameter Real Qmin = 0 "minimum performance, m3/d";
-    */  parameter Real Qini = 5000 "initial flow rate m3/d";
-     /* parameter Real k_RT = 5 "response time constant 1/d";
-      Real Qactual "m3/d"; */
+      parameter Real Qini = 50.0 "initial flow rate m3/d";
+      parameter Real k_RT = 5 "response time constant 1/d";
+      Real Qactual "m3/d";
       OpenWasteWater.ASM3.InPipe In1 annotation(
         Placement(visible = true, transformation(origin = {-98, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-98, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.OutPipe Out1 annotation(
         Placement(visible = true, transformation(origin = {98, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {98, 30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    /*  inQ Qset annotation(
+      inQ Qset annotation(
         Placement(visible = true, transformation(origin = {-100, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-100, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     initial equation
-      Qactual = Qini; */
+      Qactual = Qini;
     equation
-// der(Qactual) = k_RT*((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qactual);
-      In1.Q = Qini;
+      der(Qactual) = k_RT*((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qactual);
+      In1.Q = Qactual;
       In1.Q + Out1.Q = 0;
       In1.S = Out1.S;
       In1.X = Out1.X;
@@ -805,41 +866,40 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       <p style=\"font-size:20px\">
       The pump contains in and outflow connectors and is placed in between the components of the model.
       The outflow is equal to the input value Q given by the controller.
-
+    
       The concentration of the compounds in the stream remains the same.
-
+    
       The maximum and minimum pumping performance can not be exceeded by the pump.</p>
       </html>"));
     end Pump;
 
     model Blower
       extends OpenWasteWater.Icons.blower;
-    //  parameter Real Qmax = 15361 "max. performance, m3/d";
-    //  parameter Real Qmin = 0 "min. performance, m3/d";
-      parameter Real Qini = 3000.0 "initial air flow rate m3/d";
+      parameter Real Qmax = 15361 "max. performance, m3/d";
+      parameter Real Qmin = 0 "min. performance, m3/d";
+      parameter Real Qini = 5000.0 "initial air flow rate m3/d";
       parameter Real k_RT = 50 "response time constant 1/d";
-      parameter Real Qset = 10000 "FlexTreat performance, m3/d";
-      //inQ Qset annotation(Placement(visible = true, transformation(origin = {102, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {102, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      inQ Qset annotation(
+        Placement(visible = true, transformation(origin = {102, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {102, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       outQ Qair annotation(
         Placement(visible = true, transformation(origin = {-8, 98}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-8, 98}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     initial equation
       Qair.Q = Qini;
     equation
-        der(Qair.Q) = k_RT*Qset - Qair.Q;
-//der(Qair.Q) = k_RT*((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qair.Q);
+      der(Qair.Q) = k_RT*((if Qset.Q > Qmax then Qmax else if Qset.Q < Qmin then Qmin else Qset.Q) - Qair.Q);
       annotation(
         defaultComponentName = "blower",
         Documentation(info = "<html>
-  <H1 style=\"font-size:20px\">aeration unit</H1>
-  <p style=\"font-size:20px\">
-  The blower contains an outflow connectors and is placed at each of the activated sludge tanks.
-  The outflow is equal to the input value Q given by the controller.
-
-  The air flow rate will only be used to calculate the kLa in the tanks without any impact on the compound concentrations in the water.
-
-  The maximum and minimum blowing performance was chosen to be the performance of reactor 3 and 4 and can not be exceeded by the blower.
-  </p>
-  </html>"));
+    <H1 style=\"font-size:20px\">aeration unit</H1>
+    <p style=\"font-size:20px\">
+    The blower contains an outflow connectors and is placed at each of the activated sludge tanks.
+    The outflow is equal to the input value Q given by the controller.
+    
+    The air flow rate will only be used to calculate the kLa in the tanks without any impact on the compound concentrations in the water.
+    
+    The maximum and minimum blowing performance was chosen to be the performance of reactor 3 and 4 and can not be exceeded by the blower.
+    </p>
+    </html>"));
     end Blower;
 
     model SetQ
@@ -1231,7 +1291,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       OpenWasteWater.ASM3.OutPipe Out1, Out2;
       OpenWasteWater.ASM3.Soluble S;
       OpenWasteWater.ASM3.Particulate X;
-     // OpenWasteWater.ASM3.TechUnits.outWWSensor Out2WWSensor;
+      // OpenWasteWater.ASM3.TechUnits.outWWSensor Out2WWSensor;
       Real HRT_h, n_COD, n_X, H;
     equation
       S = In1.S;
@@ -1441,7 +1501,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Xn = 6.0;
     equation
       0 = Out1.Q + Out2.Q + In1.Q;
-     // In1.Q = Out1.Q; // newly added
+// In1.Q = Out1.Q; // newly added
       Out1.T = In1.T;
       Out2.T = In1.T;
       Xtot = In1.X.SS;
@@ -1600,7 +1660,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     end BottomPart;
 
     model SCL
-     // parameter Real Q2 = 18881 "Return sludge flow + waste sludge";
+      // parameter Real Q2 = 18881 "Return sludge flow + waste sludge";
       parameter Real fns = 0.00228 "fraction of not sedimentable soldis";
       parameter Real A = 1500.0 "m2";
       parameter Real z = 0.4 "m";
@@ -2016,596 +2076,184 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     end Test_WWTP_ADM;
 
     model FlexTreat
-    // Screening Effluent
-      OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/DanaP2M/Documents/GitHub/ OpenWasteWater/Resources/ASM3/Inf_Raw_rain.txt") annotation(
-      Placement(visible = true, transformation(origin = {-84, 89}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Influent of the plant
-      OpenWasteWater.ASM3.Divider2 PC_influent annotation(
-        Placement(visible = true, transformation(origin = {-49, 88}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Divider of the plant influent
-      // Primary Clarification
-      OpenWasteWater.ASM3.SedTank.PreClar PC1 annotation(
-        Placement(visible = true, transformation(origin = {-20, 91}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Primary clarifier 1
-      OpenWasteWater.ASM3.SedTank.PreClar PC2 annotation(
-        Placement(visible = true, transformation(origin = {-20, 71}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Primary clarifier 2
-      OpenWasteWater.ASM3.Mixer2 PC_effluent annotation(
-        Placement(visible = true, transformation(origin = {-56, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      // Mixer of primary clarification effluent
-      OpenWasteWater.ASM3.Mixer2 Sand annotation(
-        Placement(visible = true, transformation(origin = {8, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Mixer of primary clarification sand
-      OpenWasteWater.ASM3.WasteSludge Disposal annotation(
-        Placement(visible = true, transformation(origin = {36, 80}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Sand container
-      // Aeration Tanks
-      OpenWasteWater.ASM3.Divider3 AT_influent annotation(
-        Placement(visible = true, transformation(origin = {-80, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      // Divider of aeration tank influent
-      OpenWasteWater.ASM3.NitrificationTank AT1 annotation(
-        Placement(visible = true, transformation(origin = {-78, 48}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Aeration tank 1
-      OpenWasteWater.ASM3.NitrificationTank AT2 annotation(
-        Placement(visible = true, transformation(origin = {-78, -6}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Aeration tank 2
-      OpenWasteWater.ASM3.NitrificationTank AT3 annotation(
-        Placement(visible = true, transformation(origin = {-78, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Aeration tank 3
-      OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
-        Placement(visible = true, transformation(origin = {-64, 32}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-      // Blower of AT1
-      OpenWasteWater.ASM3.TechUnits.Blower B2 annotation(
-        Placement(visible = true, transformation(origin = {-64, -22}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-      // Blower of AT2
-      OpenWasteWater.ASM3.TechUnits.Blower B3 annotation(
-        Placement(visible = true, transformation(origin = {-64, -76}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-      // Blower of AT3
-      // Settling Tanks
-      OpenWasteWater.ASM3.SecClar.SCL SC1 annotation(
-        Placement(visible = true, transformation(origin = {-54, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Secondary clarifier 1
-      OpenWasteWater.ASM3.SecClar.SCL SC2 annotation(
-        Placement(visible = true, transformation(origin = {-54, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Secondary clarifier 2
-      OpenWasteWater.ASM3.SecClar.SCL SC3 annotation(
-        Placement(visible = true, transformation(origin = {-54, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Secondary clarifier 3
-      OpenWasteWater.ASM3.Divider2 SC1_effluent annotation(
-        Placement(visible = true, transformation(origin = {-29, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Divider of SC1 effluent
-      OpenWasteWater.ASM3.Divider2 SC2_effluent annotation(
-        Placement(visible = true, transformation(origin = {-29, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Divider of SC2 effluent
-      OpenWasteWater.ASM3.Divider2 SC3_effluent annotation(
-        Placement(visible = true, transformation(origin = {-29, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Divider of SC3 effluent
-      // Sludge return and waste
-      OpenWasteWater.ASM3.Divider2 S1 annotation(
-        Placement(visible = true, transformation(origin = {-54, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-      // Divider of AT1 sludge
-      OpenWasteWater.ASM3.Mixer2 M1 annotation(
-        Placement(visible = true, transformation(origin = {-78, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-      // Mixer of AT1 influent
-      OpenWasteWater.ASM3.Divider2 S2 annotation(
-        Placement(visible = true, transformation(origin = {-54, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-      // Divider of AT2 sludge
-      OpenWasteWater.ASM3.Mixer2 M2 annotation(
-        Placement(visible = true, transformation(origin = {-78, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-      // Mixer of AT2 influent
-      OpenWasteWater.ASM3.Divider2 S3 annotation(
-        Placement(visible = true, transformation(origin = {-54, -86}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-      // Divider of AT3 sludge
-      OpenWasteWater.ASM3.Mixer2 M3 annotation(
-        Placement(visible = true, transformation(origin = {-78, -86}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-      // Mixer of AT3 influent
-      OpenWasteWater.ASM3.Mixer3 Sludge annotation(
-        Placement(visible = true, transformation(origin = {58, -36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Mixer of secondary clarification sludge waste
-      OpenWasteWater.ASM3.WasteSludge Waste annotation(
-        Placement(visible = true, transformation(origin = {84, -36}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Sludge waste
-      // Slow Sand Filters
-      OpenWasteWater.ASM3.SedTank.Tank SSF1 annotation(
-        Placement(visible = true, transformation(origin = {-2, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Slow sand filter 1
-      OpenWasteWater.ASM3.SedTank.Tank SSF2 annotation(
-        Placement(visible = true, transformation(origin = {-2, 38}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Slow sand filter 2
-      OpenWasteWater.ASM3.Mixer2 Filter1 annotation(
-        Placement(visible = true, transformation(origin = {30, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Mixer of SSF1 and SSF2
-      OpenWasteWater.ASM3.SedTank.Tank SSF3 annotation(
-        Placement(visible = true, transformation(origin = {-2, 0}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Slow sand filter 3
-      OpenWasteWater.ASM3.SedTank.Tank SSF4 annotation(
-        Placement(visible = true, transformation(origin = {-2, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Slow sand filter 4
-      OpenWasteWater.ASM3.Mixer2 Filter2 annotation(
-        Placement(visible = true, transformation(origin = {30, -10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Mixer of SSF3 and SSF4
-      OpenWasteWater.ASM3.SedTank.Tank SSF5 annotation(
-        Placement(visible = true, transformation(origin = {-2, -54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Slow sand filter 5
-      OpenWasteWater.ASM3.SedTank.Tank SSF6 annotation(
-        Placement(visible = true, transformation(origin = {-2, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Slow sand filter 6
-      OpenWasteWater.ASM3.Mixer2 Filter3 annotation(
-        Placement(visible = true, transformation(origin = {30, -62}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Mixer of SSF5 and SSF6
-      // Plant Effluent
-      OpenWasteWater.ASM3.Mixer3 Filtered annotation(
-        Placement(visible = true, transformation(origin = {58, 18}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Mixer of SSF effluent
-      OpenWasteWater.ASM3.Effluent Outflow annotation(
-        Placement(visible = true, transformation(origin = {84, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    // Effluent of the plant
-    equation
-      connect(Inflow.Out1, PC_influent.In1) annotation( 
-    Line(points = {{-74, 82}, {-74, 88}, {-59, 88}}));
-      connect(PC_influent.Out1, PC1.In1) annotation( 
-Line(points = {{-40, 91}, {-40, 92}, {-30, 92}}));
-      connect(PC_influent.Out2, PC2.In1) annotation( 
-Line(points = {{-40, 86.5}, {-40, 71}, {-30, 71}}));
-      connect(PC1.Out1, PC_effluent.In1) annotation( 
-Line(points = {{-10, 92}, {-10, 78}, {-28, 78}, {-37, 78}, {-37, 73.5}, {-46, 73.5}}));
-      connect(PC2.Out1, PC_effluent.In2) annotation( 
-Line(points = {{-10, 71}, {-10, 75}, {-34, 75}, {-34, 69.5}, {-46, 69.5}}));
-      connect(PC1.Out2, Sand.In2) annotation (
-      Line(origin = {-11, 82}, points = {{-9, 0}, {9, 0}}));
-      connect(PC2.Out2, Sand.In1) annotation (
-      Line(origin = {-11, 70}, points = {{-9, -8}, {7, -8}, {7, 8}, {9, 8}}));
-      connect(Sand.Out1, Disposal.In1) annotation(
-      Line(points = {{18, 80}, {26, 80}}));
-      connect(PC_effluent.Out1, AT_influent.In1) annotation( 
-Line(points = {{-66, 71.5}, {-66, 72}, {-70, 72}}));
-      connect(AT_influent.Out1, M1.In2) annotation(
-      Line(points = {{-90, 78}, {-94, 78}, {-94, 12}, {-80.5, 12}}));
-      connect(AT_influent.Out2, M2.In2) annotation( 
-Line(points = {{-90, 71.5}, {-96, 71.5}, {-96, -42}, {-80.5, -42}}));
-      connect(AT_influent.Out3, M3.In2) annotation( 
-Line(points = {{-90, 75.5}, {-98, 75.5}, {-98, -96}, {-80.5, -96}}));
-      connect(M1.Out1, AT1.In1) annotation(
-      Line(points = {{-78, 32}, {-88, 32}, {-88, 48}}));
-      connect(M2.Out1, AT2.In1) annotation(
-      Line(origin = {-83, -14}, points = {{5, -8}, {-5, -8}, {-5, 8}}));
-      connect(M3.Out1, AT3.In1) annotation(
-      Line(origin = {-83, -68}, points = {{5, -8}, {-5, -8}, {-5, 8}}));
-      connect(B1.Qair, AT1.InQair) annotation(
-        Line(points = {{-64, 38}, {-78, 38}}));
-      connect(B2.Qair, AT2.InQair) annotation(
-        Line(points = {{-64, -16}, {-64, -16.12}, {-78.48, -16.12}}));
-      connect(B3.Qair, AT3.InQair) annotation(
-        Line(points = {{-64, -70}, {-64, -70.12}, {-78.48, -70.12}}));
-      connect(AT1.Out1, SC1.In1) annotation(
-        Line(points = {{-68, 48}, {-64, 48}}));
-      connect(AT2.Out1, SC2.In1) annotation(
-        Line(points = {{-68, -6}, {-64, -6}}));
-      connect(AT3.Out1, SC3.In1) annotation(
-        Line(points = {{-68, -60}, {-64, -60}}));
-      connect(SC1.Out1, SC1_effluent.In1) annotation(
-        Line(points = {{-44, 52}, {-44, 46}, {-39, 46}}));
-      connect(SC2.Out1, SC2_effluent.In1) annotation(
-        Line(points = {{-43.8, -2.3}, {-43.8, -8.3}, {-38.8, -8.3}}));
-      connect(SC3.Out1, SC3_effluent.In1) annotation(
-        Line(points = {{-43.8, -56.3}, {-43.8, -62.3}, {-38.8, -62.3}}));
-      connect(SC1.Out2, S1.In1) annotation( 
-Line(points = {{-54, 36}, {-54, 32}}));
-      connect(SC2.Out2, S2.In1) annotation(
-      Line(points = {{-54, -18}, {-54, -22}}));
-      connect(SC3.Out2, S3.In1) annotation(
-      Line(origin = {-54, -74}, points = {{0, 2}, {0, -2}}));
-      connect(S1.Out2, M1.In1) annotation(
-      Line(points = {{-55.5, 13}, {-66, 13}, {-66, 12}, {-76, 12}}));
-      connect(S2.Out2, M2.In1) annotation(
-      Line(points = {{-55.5, -41}, {-66, -41}, {-66, -42}, {-76, -42}}));
-      connect(S3.Out2, M3.In1) annotation(
-      Line(origin = {-66, -96}, points = {{10, 0}, {-10, 0}}));
-      connect(S1.Out1, Sludge.In1) annotation( 
-Line(points = {{-51, 13}, {-51, 10}, {48, 10}, {48, -32}}));
-      connect(S2.Out1, Sludge.In2) annotation(
-      Line(points = {{-51, -41}, {-45, -41}, {-45, -36}, {48, -36}}));
-      connect(S3.Out1, Sludge.In3) annotation(
-      Line(points = {{-51, -95}, {42, -95}, {42, -41}, {48, -41}}));
-      connect(Sludge.Out1, Waste.In1) annotation(
-      Line(points = {{68, -36}, {74, -36}}));
-      connect(SC1_effluent.Out1, SSF1.In1) annotation(
-        Line(points = {{-20, 49}, {-20, 54}, {-12, 54}}));
-      connect(SC1_effluent.Out2, SSF2.In1) annotation(
-        Line(points = {{-20, 44.5}, {-20, 38}, {-12, 38}}));
-      connect(SSF1.Out1, Filter1.In2) annotation(
-        Line(points = {{8, 54}, {8, 48.5}, {20, 48.5}}));
-      connect(SSF2.Out1, Filter1.In1) annotation(
-        Line(points = {{8, 38}, {8, 44.5}, {20, 44.5}}));
-      connect(SC2_effluent.Out1, SSF3.In1) annotation(
-        Line(points = {{-20, -5.4}, {-20, 0}, {-12, 0}}));
-      connect(SC2_effluent.Out2, SSF4.In1) annotation(
-        Line(points = {{-20, -9.5}, {-20, -16}, {-12, -16}}));
-      connect(SSF3.Out1, Filter2.In2) annotation(
-        Line(points = {{8, 0}, {8, -7.5}, {19.8, -7.5}}));
-      connect(SSF4.Out1, Filter2.In1) annotation(
-        Line(points = {{8, -16}, {8, -11.5023}, {19.7969, -11.5023}}));
-      connect(SC3_effluent.Out1, SSF5.In1) annotation(
-        Line(points = {{-20, -59.4}, {-20, -54.4}, {-12, -54.4}}));
-      connect(SC3_effluent.Out2, SSF6.In1) annotation(
-        Line(points = {{-20, -63.5}, {-20, -70}, {-12, -70}}));
-      connect(SSF5.Out1, Filter3.In2) annotation(
-        Line(points = {{7.8, -54}, {7.8, -59.4984}, {19.8011, -59.4984}}));
-      connect(SSF6.Out1, Filter3.In1) annotation(
-        Line(points = {{7.8, -70}, {7.8, -63.5}, {19.8, -63.5}}));
-      connect(Filter1.Out1, Filtered.In1) annotation(
-        Line(points = {{40, 46.5}, {44.0001, 46.5}, {44.0001, 22}, {48.0001, 22}}));
-      connect(Filter2.Out1, Filtered.In2) annotation(
-        Line(points = {{40, -9.5}, {40, 18}, {48, 18}}));
-      connect(Filter3.Out1, Filtered.In3) annotation(
-        Line(points = {{40, -61.5}, {44, -61.5}, {44, 13.5}, {48, 13.5}}));
-      connect(Filtered.Out1, Outflow.In1) annotation(
-        Line(points = {{68, 18}, {74, 18}}));
-      
-      annotation(
-        Icon(coordinateSystem(extent = {{-120, -120}, {120, 120}})),
-        experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
-        Diagram(coordinateSystem(extent = {{-120, -120}, {120, 120}})));
-    
-    end FlexTreat;
-  
-  model FlexTreat1
-  // Screening Effluent
-    OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/ASM3/Inf_Raw_rain.txt") annotation(
-    Placement(visible = true, transformation(origin = {-84, 89}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Influent of the plant
-      // Primary Clarification
-      OpenWasteWater.ASM3.SedTank.PreClar PC1 annotation(
-        Placement(visible = true, transformation(origin = {-22, 89}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  // Primary clarifier 1
-      OpenWasteWater.ASM3.WasteSludge Disposal annotation(
-        Placement(visible = true, transformation(origin = {36, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  // Sand container
-      OpenWasteWater.ASM3.NitrificationTank AT1 annotation(
-        Placement(visible = true, transformation(origin = {-78, 48}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    // Aeration tank 1
-    OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
-      Placement(visible = true, transformation(origin = {-64, 32}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-    // Blower of AT1
-      // Settling Tanks
-    OpenWasteWater.ASM3.SecClar.SCL SC1 annotation(
-      Placement(visible = true, transformation(origin = {-54, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    // Secondary clarifier 1
-  
-      // Sludge return and waste
-    OpenWasteWater.ASM3.Divider2 S1 annotation(
-      Placement(visible = true, transformation(origin = {-54, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-    // Divider of AT1 sludge
-    OpenWasteWater.ASM3.Mixer2 M1 annotation(
-      Placement(visible = true, transformation(origin = {-78, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-    // Mixer of AT1 influent
-      OpenWasteWater.ASM3.WasteSludge Waste annotation(
-        Placement(visible = true, transformation(origin = {86, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    // Sludge waste
-    OpenWasteWater.ASM3.Effluent Outflow annotation(
-      Placement(visible = true, transformation(origin = {82, 44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  // Effluent of the plant
-  equation
-      connect(Inflow.Out1, PC1.In1) annotation(
-        Line(points = {{-74, 82}, {-74, 89}, {-32, 89}}));
-      connect(PC1.Out1, M1.In2) annotation(
-        Line(points = {{-12, 89}, {-12, 110}, {-97, 110}, {-97, 12}, {-80.5, 12}}));
-      connect(PC1.Out2, Disposal.In1) annotation(
-        Line(points = {{-22, 79}, {22, 79}, {22, 86}, {26, 86}}));
-      connect(M1.Out1, AT1.In1) annotation(
-        Line(points = {{-78.5, 32}, {-78.5, 48}, {-88, 48}}));
-      connect(B1.Qair, AT1.InQair) annotation(
-        Line(points = {{-64, 38}, {-78, 38}}));
-      connect(AT1.Out1, SC1.In1) annotation(
-        Line(points = {{-68, 48}, {-64, 48}}));
-      connect(SC1.Out1, Outflow.In1) annotation(
-        Line(points = {{-44, 52}, {-44, 46}, {72, 46}}));
-      connect(SC1.Out2, S1.In1) annotation(
-        Line(points = {{-54, 36}, {-54, 32}}));
-      connect(S1.Out2, M1.In1) annotation(
-        Line(points = {{-55.5, 13}, {-66, 13}, {-66, 12}, {-76.5, 12}}));
-      connect(S1.Out1, Waste.In1) annotation(
-        Line(points = {{-51, 13}, {-51, 10}, {76, 10}}));
-      annotation(
-      Icon(coordinateSystem(extent = {{-120, -120}, {120, 120}})),
-      experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
-      Diagram(coordinateSystem(extent = {{-120, -120}, {120, 120}})));
-  
-  end FlexTreat1;
-
-    model FlexTreat101
-    
-      OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/ASM3/Inf_strm1.txt") annotation(
-      Placement(visible = true, transformation(origin = {-92, 89}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/ASM3/Hughada.txt") annotation(
+        Placement(visible = true, transformation(origin = {-102, 49}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       // Screening Effluent
-    /*OpenWasteWater.ASM3.Divider2 D1 annotation(
-        Placement(visible = true, transformation(origin = {-80, 72}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-      // Divider of aeration tank influent */
-      OpenWasteWater.ASM3.NitrificationTank AT1 annotation(
-        Placement(visible = true, transformation(origin = {-88, 54}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Aeration tank 1
-    /*OpenWasteWater.ASM3.NitrificationTank AT2 annotation(
-        Placement(visible = true, transformation(origin = {-78, -6}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Aeration tank 2
-      OpenWasteWater.ASM3.NitrificationTank AT3 annotation(
-        Placement(visible = true, transformation(origin = {-78, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Aeration tank 3 */
-      OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
-        Placement(visible = true, transformation(origin = {-64, 32}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-      // Blower of AT1
-    /*  OpenWasteWater.ASM3.TechUnits.Blower B2 annotation(
-        Placement(visible = true, transformation(origin = {-64, -22}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-      // Blower of AT2
-      OpenWasteWater.ASM3.TechUnits.Blower B3 annotation(
-        Placement(visible = true, transformation(origin = {-64, -76}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-      // Blower of AT3 */
-      OpenWasteWater.ASM3.SecClar.SCL SC1 annotation(
-        Placement(visible = true, transformation(origin = {-24, 52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.Pump WS annotation(
-        Placement(visible = true, transformation(origin = {-26, 2}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Divider3 D1 annotation(
+        Placement(visible = true, transformation(origin = {-92, 8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Mixer3 M1 annotation(
+        Placement(visible = true, transformation(origin = {34, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Mixer3 M2 annotation(
+        Placement(visible = true, transformation(origin = {34, -12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Sub_WWTP_Modells.Cascade L1(AT_H = 4.6, AT_V = 59670, B_Q = 10000, RP_Q = 10000, SC_A = 1733.62, SC_z = 4.6, WP_Q = 285) annotation(
+        Placement(visible = true, transformation(origin = {-42, 30}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Sub_WWTP_Modells.Cascade L2(AT_H = 4.6, AT_V = 59670, B_Q = 10000, RP_Q = 10000, SC_A = 1733.62, SC_z = 4.6, WP_Q = 285) annotation(
+        Placement(visible = true, transformation(origin = {-42, 2}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Sub_WWTP_Modells.Cascade L3(AT_H = 4.6, AT_V = 59670, B_Q = 10000, RP_Q = 10000, SC_A = 1733.62, SC_z = 4.6, WP_Q = 285) annotation(
+        Placement(visible = true, transformation(origin = {-42, -26}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.WasteSludge Waste annotation(
-        Placement(visible = true, transformation(origin = {52, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Sludge waste
+        Placement(visible = true, transformation(origin = {82, -12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.Effluent Outflow annotation(
-        Placement(visible = true, transformation(origin = {86, 28}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Effluent of the plant
-      // Effluent of the plant
-    /* OpenWasteWater.ASM3.Effluent Outflow2 annotation(
-        Placement(visible = true, transformation(origin = {84, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.Effluent Outflow3 annotation(
-        Placement(visible = true, transformation(origin = {84, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      // Effluent of the plant */
+        Placement(visible = true, transformation(origin = {82, 18}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
-      connect(Inflow.Out1, AT1.In1) annotation(
-          Line(points = {{-82, 82}, {-82, 67.5}, {-98, 67.5}, {-98, 54}}));
-    /*  connect(D1.Out1, AT1.In1) annotation(
-      Line(points = {{-78, 32}, {-88, 32}, {-88, 48}}));
-        connect(D1.Out2, AT2.In1) annotation(
-      Line(origin = {-83, -14}, points = {{5, -8}, {-5, -8}, {-5, 8}}));
-        connect(D1.Out3, AT3.In1) annotation(
-      Line(origin = {-83, -68}, points = {{5, -8}, {-5, -8}, {-5, 8}}));
-    */  connect(B1.Qair, AT1.InQair) annotation(
-        Line(points = {{-64, 38}, {-71, 38}, {-71, 44}, {-88, 44}}));
-    /*  connect(B2.Qair, AT2.InQair) annotation(
-        Line(points = {{-64, -16}, {-64, -16.12}, {-78.48, -16.12}}));
-        connect(B3.Qair, AT3.InQair) annotation(
-        Line(points = {{-64, -70}, {-64, -70.12}, {-78.48, -70.12}}));
-    */  connect(AT1.Out1, SC1.In1) annotation(
-        Line(points = {{-78, 54}, {-78, 53}, {-34, 53}}));
-    /*  connect(AT2.Out1, Outflow2.In1);
-        connect(AT3.Out1, Outflow3.In1);
-    */  connect(SC1.Out1, Outflow.In1) annotation(
-          Line(points = {{-14, 58}, {4, 58}, {4, 30}, {76, 30}}));
-        connect(SC1.Out2, WS.In1) annotation(
-          Line(points = {{-24, 42}, {-24, 19.5}, {-36, 19.5}, {-36, -1}}));
-        connect(WS.Out1, Waste.In1) annotation(
-        Line(points = {{-16, 5}, {42, 5}, {42, -16}}));
+      connect(Inflow.Out1, D1.In1) annotation(
+        Line(points = {{-92, 42}, {-92, 29}, {-102, 29}, {-102, 8}}));
+      connect(D1.Out1, L1.In1) annotation(
+        Line(points = {{-82, 12.5}, {-82, 38}, {-57, 38}}));
+      connect(D1.Out2, L2.In1) annotation(
+        Line(points = {{-82, 8.5}, {-68.25, 8.5}, {-68.25, 10}, {-57, 10}}));
+      connect(D1.Out3, L3.In1) annotation(
+        Line(points = {{-82, 4.5}, {-82, -19.5}, {-54.5, -19.5}}));
+      connect(L1.Out1, M1.In1) annotation(
+        Line(points = {{-27, 28}, {-10, 28}, {-10, 24}, {24, 24}}));
+      connect(L2.Out1, M1.In2) annotation(
+        Line(points = {{-27, 0}, {-10, 0}, {-10, 20}, {24, 20}}));
+      connect(L3.Out1, M1.In3) annotation(
+        Line(points = {{-29, -27}, {-6, -27}, {-6, 15}, {24, 15}}));
+      connect(L1.Out2, M2.In1) annotation(
+        Line(points = {{-27, 24}, {-19, 24}, {-19, 9}, {0, 9}, {0, -8}, {24, -8}}));
+      connect(L2.Out2, M2.In2) annotation(
+        Line(points = {{-27, -4}, {-10, -4}, {-10, -12}, {24, -12}}));
+      connect(L3.Out2, M2.In3) annotation(
+        Line(points = {{-30, -31}, {0, -31}, {0, -17}, {24, -17}}));
+      connect(M1.Out1, Outflow.In1) annotation(
+        Line(points = {{44, 20}, {72, 20}}));
+      connect(M2.Out1, Waste.In1) annotation(
+        Line(points = {{44, -12}, {72, -12}}));
       annotation(
         Icon(coordinateSystem(extent = {{-120, -120}, {120, 120}})),
         experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
         Diagram(coordinateSystem(extent = {{-120, -120}, {120, 120}})));
-    
-    end FlexTreat101;
-  
-  model FlexTreat_streams
-  
-    OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/ASM3/Hughada.txt") annotation(
-    Placement(visible = true, transformation(origin = {-102, 49}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    // Screening Effluent
-    OpenWasteWater.ASM3.Divider3 D1 annotation(
-      Placement(visible = true, transformation(origin = {-92, 8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    
-    OpenWasteWater.ASM3.Mixer3 M1 annotation(
-      Placement(visible = true, transformation(origin = {34, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Mixer3 M2 annotation(
-      Placement(visible = true, transformation(origin = {34, -12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    
-    OpenWasteWater.ASM3.Sub_WWTP_Modells.Stream S1 annotation(
-      Placement(visible = true, transformation(origin = {-42, 30}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Sub_WWTP_Modells.Stream S2 annotation(
-      Placement(visible = true, transformation(origin = {-42, 2}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Sub_WWTP_Modells.Stream S3 annotation(
-      Placement(visible = true, transformation(origin = {-42, -26}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
-    
-    OpenWasteWater.ASM3.WasteSludge Waste annotation(
-      Placement(visible = true, transformation(origin = {82, -12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Effluent Outflow annotation(
-      Placement(visible = true, transformation(origin = {82, 18}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-   
-  equation
-    
-    connect(Inflow.Out1, D1.In1) annotation(
-        Line(points = {{-92, 42}, {-92, 29}, {-102, 29}, {-102, 8}}));
-  
-    connect(D1.Out1, S1.In1) annotation(
-    Line(points = {{-82, 12.5}, {-82, 38}, {-57, 38}}));
-    connect(D1.Out2, S2.In1) annotation(
-    Line(points = {{-82, 8.5}, {-68.25, 8.5}, {-68.25, 10}, {-57, 10}}));
-    connect(D1.Out3, S3.In1) annotation(
-    Line(points = {{-82, 4.5}, {-82, -19.5}, {-54.5, -19.5}}));
-  
-    connect(S1.Out1, M1.In1) annotation(
-        Line(points = {{-27, 28}, {-10, 28}, {-10, 24}, {24, 24}}));
-    connect(S2.Out1, M1.In2) annotation(
-      Line(points = {{-27, 0}, {-10, 0}, {-10, 20}, {24, 20}}));
-    connect(S3.Out1, M1.In3) annotation(
-      Line(points = {{-29, -27}, {-6, -27}, {-6, 15}, {24, 15}}));
-    
-    connect(S1.Out2, M2.In1) annotation(
-        Line(points = {{-27, 24}, {-19, 24}, {-19, 9}, {0, 9}, {0, -8}, {24, -8}}));
-    connect(S2.Out2, M2.In2) annotation(
-        Line(points = {{-27, -4}, {-10, -4}, {-10, -12}, {24, -12}}));
-    connect(S3.Out2, M2.In3) annotation(
-        Line(points = {{-30, -31}, {0, -31}, {0, -17}, {24, -17}}));
-    
-    connect(M1.Out1, Outflow.In1) annotation(
-        Line(points = {{44, 20}, {72, 20}}));
-    connect(M2.Out1, Waste.In1) annotation(
-        Line(points = {{44, -12}, {72, -12}}));
-    
-    annotation(
-      Icon(coordinateSystem(extent = {{-120, -120}, {120, 120}})),
-      experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
-      Diagram(coordinateSystem(extent = {{-120, -120}, {120, 120}})));
-  
-  end FlexTreat_streams;
-  
-  model FlexTreat_stream
-  
-    OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/ASM3/Inf_strm.txt") annotation(
-    Placement(visible = true, transformation(origin = {-102, 49}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    // Screening Effluent
-    OpenWasteWater.ASM3.Divider2 D1 annotation(
-      Placement(visible = true, transformation(origin = {-82, 24}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Mixer2 M1 annotation(
-      Placement(visible = true, transformation(origin = {44, 26}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Mixer2 M2 annotation(
-      Placement(visible = true, transformation(origin = {46, -14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Sub_WWTP_Modells.Stream S1 annotation(
-      Placement(visible = true, transformation(origin = {-42, 32}, extent = {{-15, -10}, {15, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Sub_WWTP_Modells.Stream S2 annotation(
-      Placement(visible = true, transformation(origin = {-42, 2}, extent = {{-15, -10}, {15, 10}}, rotation = 0))); 
-    OpenWasteWater.ASM3.WasteSludge Waste annotation(
-      Placement(visible = true, transformation(origin = {86, -14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.Effluent Outflow annotation(
-      Placement(visible = true, transformation(origin = {86, 24}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-     
-  equation
-    connect(Inflow.Out1, D1.In1) annotation(
-        Line(points = {{-92, 42}, {-92, 24}}));
-  
-    connect(D1.Out1, S1.In1) annotation(
-    Line(points = {{-73, 27}, {-73, 38.5}, {-54.5, 38.5}}));
-    connect(D1.Out2, S2.In1) annotation(
-    Line(points = {{-73, 22.5}, {-73, 8.5}, {-54.5, 8.5}}));
-    D1.Out1.Q = D1.Out2.Q;
-  
-    connect(S1.Out1, M1.In2) annotation(
-        Line(points = {{-29, 31}, {-11, 31}, {-11, 28.5}, {34, 28.5}}));
-    connect(S2.Out1, M1.In1) annotation(
-        Line(points = {{-29, 1}, {4, 1}, {4, 24.5}, {34, 24.5}})); 
-    connect(S1.Out2, M2.In2) annotation(
-        Line(points = {{-30, 27}, {-30, 27.125}, {-19, 27.125}, {-19, 11.25}, {36, 11.25}, {36, -11.5}}));
-    connect(S2.Out2, M2.In1) annotation(
-        Line(points = {{-30, -3}, {-10, -3}, {-10, -15.5}, {36, -15.5}}));
-    
-    connect(M1.Out1, Outflow.In1) annotation(
-    Line(origin = {65, 26}, points = {{-11, 0}, {11, 0}}));
-    connect(M2.Out1, Waste.In1) annotation(
-    Line(origin = {66, -14}, points = {{-10, 0}, {10, 0}}));
-  
-    annotation(
-      Icon(coordinateSystem(extent = {{-120, -120}, {120, 120}})),
-      experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
-      Diagram(coordinateSystem(extent = {{-120, -120}, {120, 120}})));
-  
-  end FlexTreat_stream;
-  
+    end FlexTreat;
   end WWTP_Examples;
 
   package Sub_WWTP_Modells
-    class FT_stream
-    
-     OpenWasteWater.ASM3.Inflow Inflow(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/ASM3/Inf_Raw_rain.txt") annotation(
-      Placement(visible = true, transformation(origin = {-108, 91}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    
+  model Cascade
+    parameter Real AT_V = 135*85*5.2, AT_H = 4.6, 
+                   SC_A = 85.4*20.3, SC_z = 4.6, 
+                   RP_Q = 10000, WP_Q = 285, 
+                   B_Q = 10000;
     OpenWasteWater.ASM3.Mixer2 M1 annotation(
-        Placement(visible = true, transformation(origin = {-78, 22}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
+      Placement(visible = true, transformation(origin = {-58, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
     OpenWasteWater.ASM3.Divider2 D1 annotation(
-        Placement(visible = true, transformation(origin = {-18, -32}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-    OpenWasteWater.ASM3.SecClar.SCL SC1 annotation(
-        Placement(visible = true, transformation(origin = {-34, 46}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    OpenWasteWater.ASM3.NitrificationTank AT1 annotation(
-        Placement(visible = true, transformation(origin = {-78, 48}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Placement(visible = true, transformation(origin = {6, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
+    OpenWasteWater.ASM3.SecClar.SCL SC1(A = SC_A , z = SC_z) annotation(
+      Placement(visible = true, transformation(origin = {6, 84}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.NitriCascade AT1(N=4, H = AT_H, V_R = AT_V) annotation(
+      Placement(visible = true, transformation(origin = {-38, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
-        Placement(visible = true, transformation(origin = {-64, 32}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
-     OpenWasteWater.ASM3.TechUnits.Pump WS annotation(
-        Placement(visible = true, transformation(origin = {16, 8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-     OpenWasteWater.ASM3.TechUnits.Pump RS annotation(
-        Placement(visible = true, transformation(origin = {-56, -14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-     OpenWasteWater.ASM3.WasteSludge Waste annotation(
-        Placement(visible = true, transformation(origin = {88, -30}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-     OpenWasteWater.ASM3.Effluent Outflow annotation(
-        Placement(visible = true, transformation(origin = {48, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    
-    equation
-      connect(Inflow.Out1, M1.In1) annotation(
-        Line(points = {{-98, 84}, {-98, 12}, {-76.5, 12}}));
-      connect(B1.Qair, AT1.InQair) annotation(
-        Line(points = {{-64, 38}, {-78, 38}}));
-      connect(M1.Out1, AT1.In1) annotation(
-        Line(points = {{-78.5, 32}, {-88, 32}, {-88, 48}}));
-      connect(AT1.Out1, SC1.In1) annotation(
-        Line(points = {{-68, 48}, {-66, 48}, {-66, 47}, {-44, 47}}));
-      connect(SC1.Out1, Outflow.In1) annotation(
-        Line(points = {{-24, 52}, {38, 52}}));
-      connect(D1.Out2, RS.In1) annotation(
-        Line(points = {{-19.5, -41}, {-66, -41}, {-66, -17}}));
-      connect(RS.Out1, M1.In2)annotation(
-        Line(points = {{-46, -11}, {-46, 12}, {-80.5, 12}}));
-      connect(D1.Out1, WS.In1) annotation(
-        Line(points = {{-15, -41}, {6, -41}, {6, 5}}));
-      connect(SC1.Out2, D1.In1) annotation(
-        Line(points = {{-34, 36}, {-34, 25.5}, {-18, 25.5}, {-18, -22}}));
-      connect(WS.Out1, Waste.In1) annotation(
-        Line(points = {{26, 11}, {26, -30}, {78, -30}}));
-    
-    annotation(
-        Icon(coordinateSystem(extent = {{-120, -120}, {120, 120}})),
-        experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
-        Diagram(coordinateSystem(extent = {{-120, -120}, {120, 120}})));
-    
-    end FT_stream;
-    
-      model Stream
-      
-  OpenWasteWater.ASM3.Mixer2 M1 annotation(
-        Placement(visible = true, transformation(origin = {-88, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
-  OpenWasteWater.ASM3.Divider2 D1 annotation(
-        Placement(visible = true, transformation(origin = {-24, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
-  OpenWasteWater.ASM3.SecClar.SCL SC1(A=1733.62, z=4.6) annotation(
-        Placement(visible = true, transformation(origin = {-24, 84}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.NitrificationTank AT1(H=4.6, V_R=59670) annotation(
-        Placement(visible = true, transformation(origin = {-68, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
-        Placement(visible = true, transformation(origin = {-64, 32}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
+      Placement(visible = true, transformation(origin = {-34, 56}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
     OpenWasteWater.ASM3.TechUnits.Pump WS annotation(
-        Placement(visible = true, transformation(origin = {0, 12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      Placement(visible = true, transformation(origin = {30, 12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.TechUnits.Pump RS annotation(
-        Placement(visible = true, transformation(origin = {-46, 12}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
-    
+      Placement(visible = true, transformation(origin = {-16, 12}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
+    OpenWasteWater.ASM3.TechUnits.SetQ setQ_RS(Q = RP_Q) annotation(
+      Placement(visible = true, transformation(origin = {10, -58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.TechUnits.SetQ setQ_WS(Q = WP_Q) annotation(
+      Placement(visible = true, transformation(origin = {48, -58}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+    OpenWasteWater.ASM3.TechUnits.SetQ setQ_B1(Q = B_Q) annotation(
+      Placement(visible = true, transformation(origin = {-28, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     OpenWasteWater.ASM3.OutPipe Out1 annotation(
-        Placement(visible = true, transformation(origin = {10, 90}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {102, -16}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-     OpenWasteWater.ASM3.OutPipe Out2 annotation(
-        Placement(visible = true, transformation(origin = {10, -46}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {98, -62}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-     OpenWasteWater.ASM3.InPipe In1 annotation(
-        Placement(visible = true, transformation(origin = {-110, 86}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {-100, 78}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
-     equation
-      connect(In1, M1.In2) annotation(
-        Line(points = {{-110, 86}, {-110, 10}, {-90.5, 10}}));
-      connect(B1.Qair, AT1.InQair) annotation(
-        Line(points = {{-64, 38}, {-68, 38}, {-68, 76}}));
-      connect(M1.Out1, AT1.In1) annotation(
-        Line(points = {{-88.5, 30}, {-88, 30}, {-88, 86}, {-78, 86}}));
-      connect(AT1.Out1, SC1.In1) annotation(
-        Line(points = {{-58, 86}, {-58, 85}, {-34, 85}}));
-      connect(SC1.Out1, Out1) annotation(
-        Line(points = {{-14, 90}, {10, 90}}));
-      connect(D1.Out2, RS.In1) annotation(
-        Line(points = {{-25.5, 27}, {-25.5, -41}, {-36, -41}, {-36, 15}}));
-      connect(RS.Out1, M1.In1)annotation(
-        Line(points = {{-56, 9}, {-56, 10}, {-86.5, 10}}));
-      connect(D1.Out1, WS.In1) annotation(
-        Line(points = {{-21, 27}, {-21, -41}, {-10, -41}, {-10, 9}}));
-      connect(SC1.Out2, D1.In1) annotation(
-        Line(points = {{-24, 74}, {-24, 46}}));
-      connect(WS.Out1, Out2) annotation(
-        Line(points = {{10, 15}, {10, -46}}));
+      Placement(visible = true, transformation(origin = {40, 90}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {102, -16}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
+    OpenWasteWater.ASM3.OutPipe Out2 annotation(
+      Placement(visible = true, transformation(origin = {40, -46}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {98, -62}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
+    OpenWasteWater.ASM3.InPipe In1 annotation(
+      Placement(visible = true, transformation(origin = {-80, 86}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {-100, 78}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
+  equation
+    connect(In1, M1.In2) annotation(
+      Line(points = {{-80, 86}, {-80, 10}, {-60.5, 10}}));
+    connect(setQ_B1.OutQ1, B1.Qset) annotation(
+      Line(points = {{-37.6, -7.9}, {-28.6, -7.9}, {-28.6, 54.1}, {-27.6, 54.1}}, color = {78, 154, 6}));
+    connect(B1.Qair, AT1.InQair) annotation(
+      Line(points = {{-34.48, 61.88}, {-38.48, 61.88}, {-38.48, 75.88}}));
+    connect(M1.Out1, AT1.In1) annotation(
+      Line(points = {{-58.5, 30}, {-58, 30}, {-58, 86}, {-48, 86}}));
+    connect(AT1.Out1, SC1.In1) annotation(
+      Line(points = {{-28, 86}, {-28, 85}, {-4, 85}}));
+    connect(SC1.Out1, Out1) annotation(
+      Line(points = {{16.2, 89.7}, {40.2, 89.7}}));
+    connect(setQ_RS.OutQ1, RS.Qset) annotation(
+      Line(points = {{0, -58}, {0, -24.4}, {-5.6, -24.4}, {-5.6, 9.1}}, color = {78, 154, 6}));
+    connect(setQ_WS.OutQ1, WS.Qset) annotation(
+      Line(points = {{58, -58}, {66.6, -58}, {66.6, 15.1}, {19.6, 15.1}}, color = {78, 154, 6}));
+    connect(D1.Out2, RS.In1) annotation(
+      Line(points = {{4.5, 27}, {4.5, -41}, {-6, -41}, {-6, 15}}));
+    connect(RS.Out1, M1.In1) annotation(
+      Line(points = {{-25.8, 9}, {-25.8, 10}, {-56.3, 10}}));
+    connect(D1.Out1, WS.In1) annotation(
+      Line(points = {{8.6, 27}, {8.6, -41}, {19.6, -41}, {19.6, 9}}));
+    connect(SC1.Out2, D1.In1) annotation(
+      Line(points = {{6, 74.2}, {6, 46.2}}));
+    connect(WS.Out1, Out2) annotation(
+      Line(points = {{39.8, 15}, {39.8, -46}}));
     annotation(
-          Icon(graphics = {Rectangle(origin = {-26, 20}, lineThickness = 0.75, extent = {{-36, 20}, {36, -20}}), Polygon(origin = {51, 9}, lineThickness = 0.75, points = {{-17, 31}, {-17, -9}, {3, -31}, {17, -9}, {15, 31}, {5, 31}, {-17, 31}}), Line(origin = {-12.9997, -21}, points = {{66.9997, 1}, {66.9997, -31}, {-67.0003, -31}, {-67.0003, 31}, {-51.0003, 31}}, thickness = 0.75), Line(origin = {68.5, -52}, points = {{-14.5, 0}, {15.5, 0}, {13.5, 0}}, thickness = 0.75), Line(origin = {22, 32}, points = {{-10, 0}, {10, 0}}, thickness = 0.75), Line(origin = {74, 32}, points = {{-8, 0}, {8, 0}}, thickness = 0.75)}));
-      
-    end Stream;
-    
+      Icon(graphics = {Rectangle(origin = {-26, 20}, lineThickness = 0.75, extent = {{-36, 20}, {36, -20}}), Polygon(origin = {51, 9}, lineThickness = 0.75, points = {{-17, 31}, {-17, -9}, {3, -31}, {17, -9}, {15, 31}, {5, 31}, {-17, 31}}), Line(origin = {-12.9997, -21}, points = {{66.9997, 1}, {66.9997, -31}, {-67.0003, -31}, {-67.0003, 31}, {-51.0003, 31}}, thickness = 0.75), Line(origin = {68.5, -52}, points = {{-14.5, 0}, {15.5, 0}, {13.5, 0}}, thickness = 0.75), Line(origin = {22, 32}, points = {{-10, 0}, {10, 0}}, thickness = 0.75), Line(origin = {74, 32}, points = {{-8, 0}, {8, 0}}, thickness = 0.75)}, coordinateSystem(extent = {{-100, -100}, {100, 100}})),
+      Diagram);
+  end Cascade;
+  
+    model Lane
+      parameter Real AT_V = 135*85*5.2, AT_H = 4.6, 
+                     SC_A = 85.4*20.3, SC_z = 4.6, 
+                     RP_Q = 10000, WP_Q = 285, 
+                     B_Q = 171360;
+      OpenWasteWater.ASM3.Mixer2 M1 annotation(
+        Placement(visible = true, transformation(origin = {-58, 20}, extent = {{-10, -10}, {10, 10}}, rotation = 90)));
+      OpenWasteWater.ASM3.Divider2 D1 annotation(
+        Placement(visible = true, transformation(origin = {6, 36}, extent = {{-10, -10}, {10, 10}}, rotation = 270)));
+      OpenWasteWater.ASM3.SecClar.SCL SC1(A = SC_A , z = SC_z) annotation(
+        Placement(visible = true, transformation(origin = {6, 84}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.NitrificationTank AT1(H = AT_H, V_R = AT_V) annotation(
+        Placement(visible = true, transformation(origin = {-38, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Blower B1 annotation(
+        Placement(visible = true, transformation(origin = {-34, 56}, extent = {{-6, -6}, {6, 6}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Pump WS annotation(
+        Placement(visible = true, transformation(origin = {30, 12}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Pump RS annotation(
+        Placement(visible = true, transformation(origin = {-16, 12}, extent = {{-10, -10}, {10, 10}}, rotation = 180)));
+      OpenWasteWater.ASM3.TechUnits.SetQ setQ_RS(Q = RP_Q) annotation(
+        Placement(visible = true, transformation(origin = {10, -58}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.SetQ setQ_WS(Q = WP_Q) annotation(
+        Placement(visible = true, transformation(origin = {48, -58}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.SetQ setQ_B1(Q = B_Q) annotation(
+        Placement(visible = true, transformation(origin = {-28, -8}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.OutPipe Out1 annotation(
+        Placement(visible = true, transformation(origin = {40, 90}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {102, -16}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
+      OpenWasteWater.ASM3.OutPipe Out2 annotation(
+        Placement(visible = true, transformation(origin = {40, -46}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {98, -62}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
+      OpenWasteWater.ASM3.InPipe In1 annotation(
+        Placement(visible = true, transformation(origin = {-80, 86}, extent = {{-5, -5}, {5, 5}}, rotation = 0), iconTransformation(origin = {-100, 78}, extent = {{-5, -5}, {5, 5}}, rotation = 0)));
+    equation
+      connect(In1, M1.In2) annotation(
+        Line(points = {{-80, 86}, {-80, 10}, {-60.5, 10}}));
+      connect(setQ_B1.OutQ1, B1.Qset) annotation(
+        Line(points = {{-37.6, -7.9}, {-28.6, -7.9}, {-28.6, 54.1}, {-27.6, 54.1}}, color = {78, 154, 6}));
+      connect(B1.Qair, AT1.InQair) annotation(
+        Line(points = {{-34.48, 61.88}, {-38.48, 61.88}, {-38.48, 75.88}}));
+      connect(M1.Out1, AT1.In1) annotation(
+        Line(points = {{-58.5, 30}, {-58, 30}, {-58, 86}, {-48, 86}}));
+      connect(AT1.Out1, SC1.In1) annotation(
+        Line(points = {{-28, 86}, {-28, 85}, {-4, 85}}));
+      connect(SC1.Out1, Out1) annotation(
+        Line(points = {{16.2, 89.7}, {40.2, 89.7}}));
+      connect(setQ_RS.OutQ1, RS.Qset) annotation(
+        Line(points = {{0, -58}, {0, -24.4}, {-5.6, -24.4}, {-5.6, 9.1}}, color = {78, 154, 6}));
+      connect(setQ_WS.OutQ1, WS.Qset) annotation(
+        Line(points = {{58, -58}, {66.6, -58}, {66.6, 15.1}, {19.6, 15.1}}, color = {78, 154, 6}));
+      connect(D1.Out2, RS.In1) annotation(
+        Line(points = {{4.5, 27}, {4.5, -41}, {-6, -41}, {-6, 15}}));
+      connect(RS.Out1, M1.In1) annotation(
+        Line(points = {{-25.8, 9}, {-25.8, 10}, {-56.3, 10}}));
+      connect(D1.Out1, WS.In1) annotation(
+        Line(points = {{8.6, 27}, {8.6, -41}, {19.6, -41}, {19.6, 9}}));
+      connect(SC1.Out2, D1.In1) annotation(
+        Line(points = {{6, 74.2}, {6, 46.2}}));
+      connect(WS.Out1, Out2) annotation(
+        Line(points = {{39.8, 15}, {39.8, -46}}));
+      annotation(
+        Icon(graphics = {Rectangle(origin = {-26, 20}, lineThickness = 0.75, extent = {{-36, 20}, {36, -20}}), Polygon(origin = {51, 9}, lineThickness = 0.75, points = {{-17, 31}, {-17, -9}, {3, -31}, {17, -9}, {15, 31}, {5, 31}, {-17, 31}}), Line(origin = {-12.9997, -21}, points = {{66.9997, 1}, {66.9997, -31}, {-67.0003, -31}, {-67.0003, 31}, {-51.0003, 31}}, thickness = 0.75), Line(origin = {68.5, -52}, points = {{-14.5, 0}, {15.5, 0}, {13.5, 0}}, thickness = 0.75), Line(origin = {22, 32}, points = {{-10, 0}, {10, 0}}, thickness = 0.75), Line(origin = {74, 32}, points = {{-8, 0}, {8, 0}}, thickness = 0.75)}, coordinateSystem(extent = {{-100, -100}, {100, 100}})),
+        Diagram);
+    end Lane;
+
     model WWTP_Part
       OpenWasteWater.ASM3.Mixer3 M1 annotation(
         Placement(visible = true, transformation(origin = {-64, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
