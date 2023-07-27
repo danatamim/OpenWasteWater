@@ -595,21 +595,19 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     r12 = b_ANO*K_AO2/(K_AO2 + S.O2)*S.NO/(K_NO + S.NO)*X.A;
 // Oxygen transfer
     rA = kLa*(S_O2sat - S.O2);
-      der(S.O2) = In1.Q / V_R * (In1.S.O2 - S.O2) +x[2]*r2+x[4]*r4+x[6]*r6+x[8]*r8+x[10]*r10+x[11]*r11 + rA;
-      der(S.I) = In1.Q / V_R * (In1.S.I - S.I) + f_SI * r1;
-      der(S.S) = In1.Q / V_R * (In1.S.S - S.S) + r1 - r2 - r3;
-      der(S.NH) = In1.Q / V_R * (In1.S.NH - S.NH) + y[1]*r1 + y[2]*r2 + y[3]* r3 + y[4]*r4 + y[5]*r5 +y[6]*r6 + y[7]*r7 + y[10]*r10 + y[11]*r11 + y[12]*r12;
-      der(S.N2) = In1.Q / V_R * (In1.S.N2 - S.N2) - x[3]*r3 - x[3]*r5 - x[7]*r7 -x[9]*r9 - x[12]*r12;
-      der(S.NO) = In1.Q / V_R * (In1.S.NO - S.NO) + x[3]*r3 + x[3]*r5 + x[7]*r7 +x[9]*r9 + x[12]*r12 + 1/Y_A * r10;
-      der(S.ALK) = In1.Q / V_R * (In1.S.ALK - S.ALK) + z[1]*r1 + z[2]*r2 + z[3]*r3 + 
-      z[4]*r4 + z[5]*r5 + z[6]*r6 + z[7]*r7 + z[8]*r8 + z[9]*r9 + z[10]*r10 + z[11]*r11 + z[12]*r12;
-  
-      der(X.I) = In1.Q / V_R * (In1.X.I - X.I) + f_XI*(r6+r7+r11+r12);
-      der(X.S) = In1.Q / V_R * (In1.X.S - X.S) - r1;
-      der(X.H) = In1.Q / V_R * (In1.X.H - X.H) + r4 + r5 - r6 - r7;
-      der(X.STO) = In1.Q / V_R * (In1.X.STO - X.STO) + Y_STOO2*r2 + Y_STONO*r3 -1/Y_HO2*r4 - 1/Y_HNO*r5 - r8 - r9;
-      der(X.A) = In1.Q / V_R * (In1.X.A - X.A) + r10 - r11 - r12;
-      der(X.SS) = In1.Q / V_R * (In1.X.SS - X.SS) + t[1]*r1 + t[2]*r2 + t[3]*r3 + t[4]*r4 + t[5]*r5 + t[6]*r6 + t[7]*r7 + t[8]*r8 + t[9]*r9 + t[10]*r10 + t[11]*r11 + t[12]*r12;
+    der(S.O2) = In1.Q/V_R*(In1.S.O2 - S.O2) + x[2]*r2 + x[4]*r4 + x[6]*r6 + x[8]*r8 + x[10]*r10 + x[11]*r11 + rA;
+    der(S.I) = In1.Q/V_R*(In1.S.I - S.I) + f_SI*r1;
+    der(S.S) = In1.Q/V_R*(In1.S.S - S.S) + r1 - r2 - r3;
+    der(S.NH) = In1.Q/V_R*(In1.S.NH - S.NH) + y[1]*r1 + y[2]*r2 + y[3]*r3 + y[4]*r4 + y[5]*r5 + y[6]*r6 + y[7]*r7 + y[10]*r10 + y[11]*r11 + y[12]*r12;
+    der(S.N2) = In1.Q/V_R*(In1.S.N2 - S.N2) - x[3]*r3 - x[3]*r5 - x[7]*r7 - x[9]*r9 - x[12]*r12;
+    der(S.NO) = In1.Q/V_R*(In1.S.NO - S.NO) + x[3]*r3 + x[3]*r5 + x[7]*r7 + x[9]*r9 + x[12]*r12 + 1/Y_A*r10;
+    der(S.ALK) = In1.Q/V_R*(In1.S.ALK - S.ALK) + z[1]*r1 + z[2]*r2 + z[3]*r3 + z[4]*r4 + z[5]*r5 + z[6]*r6 + z[7]*r7 + z[8]*r8 + z[9]*r9 + z[10]*r10 + z[11]*r11 + z[12]*r12;
+    der(X.I) = In1.Q/V_R*(In1.X.I - X.I) + f_XI*(r6 + r7 + r11 + r12);
+    der(X.S) = In1.Q/V_R*(In1.X.S - X.S) - r1;
+    der(X.H) = In1.Q/V_R*(In1.X.H - X.H) + r4 + r5 - r6 - r7;
+    der(X.STO) = In1.Q/V_R*(In1.X.STO - X.STO) + Y_STOO2*r2 + Y_STONO*r3 - 1/Y_HO2*r4 - 1/Y_HNO*r5 - r8 - r9;
+    der(X.A) = In1.Q/V_R*(In1.X.A - X.A) + r10 - r11 - r12;
+    der(X.SS) = In1.Q/V_R*(In1.X.SS - X.SS) + t[1]*r1 + t[2]*r2 + t[3]*r3 + t[4]*r4 + t[5]*r5 + t[6]*r6 + t[7]*r7 + t[8]*r8 + t[9]*r9 + t[10]*r10 + t[11]*r11 + t[12]*r12;
     Out1.S = S;
     Out1.X = X;
     0 = Out1.Q + In1.Q;
@@ -1987,6 +1985,87 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       annotation(
         experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-6, Interval = 0.02));
     end Test_WWTP_ADM;
+
+    model Fuerstenwalde
+      OpenWasteWater.ASM3.Inflow Inf(Inf_File = "/home/awwjb/Git/OpenWasteWater/Resources/ASM3/Inf_rain.txt", T = 15) annotation(
+        Placement(visible = true, transformation(origin = {-92, 88}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Mixer3 M1 annotation(
+        Placement(visible = true, transformation(origin = {-64, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.controller PLS(Q_REC = 20000, Q_RS = 18446, Q_WS = 350, Q_air_N3 = 10000, k_D_O2 = 0, k_I_NO = 5000, k_I_O2 = 5000, k_P_NO = 2000, k_P_O2 = 2500) annotation(
+        Placement(visible = true, transformation(origin = {38, 24}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Pump REC_Pump(Qmax = 92239) annotation(
+        Placement(visible = true, transformation(origin = {-56, 46}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Pump RS_Pump annotation(
+        Placement(visible = true, transformation(origin = {-36, -62}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Pump WS_Pump annotation(
+        Placement(visible = true, transformation(origin = {44, -64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.SecClar.SCL SC(A = 2121, z = 3.75)  annotation(
+        Placement(visible = true, transformation(origin = {4, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Effluent Clear annotation(
+        Placement(visible = true, transformation(origin = {84, -18}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.WasteSludge Sludge annotation(
+        Placement(visible = true, transformation(origin = {84, -60}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Divider2 S1 annotation(
+        Placement(visible = true, transformation(origin = {-22, 34}, extent = {{10, 10}, {-10, -10}}, rotation = 0)));
+      OpenWasteWater.ASM3.Divider2 S2 annotation(
+        Placement(visible = true, transformation(origin = {4, -46}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+      OpenWasteWater.ASM3.TechUnits.Sensor SensorInf(t_D = 0.01) annotation(
+        Placement(visible = true, transformation(origin = {-42, 92}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
+      TechUnits.Blower B3 annotation(
+        Placement(visible = true, transformation(origin = {66, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      NitrificationTank N1(H = 4.5,Sini = Soluble(O2 = 4.0, I = 30, S = 1.15, NH = 0.2, N2 = 15.9, NO = 16.9, ALK = 3.54), V_R = 17600, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
+        Placement(visible = true, transformation(origin = {66, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.DenitrificationTank DN1(Sini = Soluble(O2 = 1.0, I = 30, S = 1.15, NH = 30.2, N2 = 0.9, NO = 1.9, ALK = 5.54), V_R = 17600, Xini = Particulate(I = 78.0, S = 37.4, H = 1216.0, A = 136.0, STO = 208.0, SS = 2000.55)) annotation(
+        Placement(visible = true, transformation(origin = {2, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+    equation
+      connect(SensorInf.S_Out1, PLS.InSensorInf) annotation(
+        Line(points = {{-32, 92}, {98, 92}, {98, -38}, {30, -38}, {30, 15}, {31, 15}}, color = {78, 154, 6}));
+      connect(Inf.OutSensor1, SensorInf.S_In1) annotation(
+        Line(points = {{-84, 92}, {-52, 92}}, color = {78, 154, 6}));
+      connect(PLS.C_WS, WS_Pump.Qset) annotation(
+        Line(points = {{29, 20}, {24, 20}, {24, -62}, {34, -62}}, color = {78, 154, 6}));
+      connect(PLS.C_RS, RS_Pump.Qset) annotation(
+        Line(points = {{29, 24}, {-16, 24}, {-16, -60}, {-26, -60}}, color = {78, 154, 6}));
+      connect(PLS.C_REC, REC_Pump.Qset) annotation(
+        Line(points = {{29, 28}, {12, 28}, {12, 40}, {-10, 40}, {-10, 49}, {-46, 49}}, color = {78, 154, 6}));
+      connect(SC.Out1, Clear.In1) annotation(
+        Line(points = {{14, -16}, {74, -16}}));
+      connect(RS_Pump.Out1, M1.In2) annotation(
+        Line(points = {{-46, -58}, {-88, -58}, {-88, 76}, {-74, 76}}));
+      connect(S1.Out1, SC.In1) annotation(
+        Line(points = {{-30, 32}, {-44, 32}, {-44, -20}, {-6, -20}, {-6, -20}, {-6, -20}}));
+      connect(REC_Pump.Out1, M1.In3) annotation(
+        Line(points = {{-66, 49}, {-82, 49}, {-82, 71}, {-74, 71}}));
+      connect(S1.Out2, REC_Pump.In1) annotation(
+        Line(points = {{-30, 36}, {-40, 36}, {-40, 43}, {-46, 43}}));
+      connect(S2.Out2, RS_Pump.In1) annotation(
+        Line(points = {{2, -54}, {2, -54}, {2, -66}, {-26, -66}, {-26, -66}}));
+      connect(S2.Out1, WS_Pump.In1) annotation(
+        Line(points = {{6, -54}, {8, -54}, {8, -68}, {34, -68}, {34, -68}}));
+      connect(SC.Out2, S2.In1) annotation(
+        Line(points = {{4, -32}, {4, -36}}));
+      connect(WS_Pump.Out1, Sludge.In1) annotation(
+        Line(points = {{54, -60}, {74, -60}}));
+      connect(Inf.Out1, M1.In1) annotation(
+        Line(points = {{-82, 81}, {-77, 81}, {-77, 80}, {-74, 80}}));
+      connect(PLS.CairR5, B3.Qset) annotation(
+        Line(points = {{47, 20}, {82, 20}, {82, 48}, {76, 48}}, color = {78, 154, 6}));
+      connect(B3.Qair, N1.InQair) annotation(
+        Line(points = {{66, 60}, {66, 60}, {66, 66}, {66, 66}}, color = {78, 154, 6}));
+      connect(N1.Out1, S1.In1) annotation(
+        Line(points = {{76, 76}, {86, 76}, {86, 2}, {-2, 2}, {-2, 34}, {-12, 34}, {-12, 34}}));
+      connect(M1.Out1, DN1.In1) annotation(
+        Line(points = {{-54, 76}, {-8, 76}}));
+      connect(DN1.Out1, N1.In1) annotation(
+        Line(points = {{12, 76}, {56, 76}}));
+      connect(N1.OutSensor1, PLS.InSensorN3) annotation(
+        Line(points = {{72, 82}, {72, 84}, {88, 84}, {88, -4}, {45, -4}, {45, 15}}, color = {78, 154, 6}));
+      connect(DN1.OutSensor1, PLS.InSensorDN2) annotation(
+        Line(points = {{7, 81}, {7, 88}, {94, 88}, {94, -32}, {35, -32}, {35, 15}}, color = {78, 154, 6}));
+      annotation(
+        experiment(StartTime = 0, StopTime = 14, Tolerance = 1e-06, Interval = 0.02),
+        Diagram);
+    end Fuerstenwalde;
   end WWTP_Examples;
 
   package Sub_WWTP_Modells
