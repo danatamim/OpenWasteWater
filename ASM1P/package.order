@@ -19,7 +19,9 @@ Inflow
 Effluent
 WasteSludge
 NitrificationTank
+NitriCascade
 DenitrificationTank
+DeniCascade
 ASM1_CSTR
 TechUnits
 SedTank

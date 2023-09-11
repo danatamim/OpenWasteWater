@@ -12,13 +12,17 @@ WWParameters
 Mixer2
 Mixer3
 Divider2
+Distributor3
 Inflow_simple
 InflowSludgeTest
 Inflow
 Effluent
 WasteSludge
+AlternateTank
 NitrificationTank
+NitriCascade
 DenitrificationTank
+DeniCascade
 ASM3_CSTR
 TechUnits
 SedTank
