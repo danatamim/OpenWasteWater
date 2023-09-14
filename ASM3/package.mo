@@ -951,7 +951,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     initial equation
       e_Q_i = 0.0;
     equation
-      SP_TSS = In1WWSensor.Value.TSS*0.25;
+    //  SP_TSS = In1WWSensor.Value.TSS*0.25;
       e_Q = (-SP_TSS) + In1WWSensor.Value.TSS;
       der(e_Q_i) = e_Q;
       P_Q = k_P_Q*e_Q;
@@ -1116,26 +1116,46 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     end controller;
 
     model RS_WS_controller
-      parameter Real Q_RS=293;
-      parameter Real Q_WS=9123;
+      parameter Real SludgeAge_SP = 25;
+      parameter Real V_R;
+      Real SRT;
+      Real iSRT, mSRT;
+      Real R1_TSS;
+      Real R1_X_SS;
+      Real SC_Out2_X_SS;
+      Real SC_Out1_X_SS;
+     // PID controller
+      Real P_QWS "proportional controller part";
+      Real I_QWS "integral controller part";
+      Real D_QWS "differential controler part";
+      parameter Real k_P_QWS = 0.5 "k-value proportional part";
+      parameter Real k_I_QWS = 0.5 "k-value integral part";
+      parameter Real k_D_QWS = 0.05 "k-value of the differential part";
+      Real e_QWS ", e_O2 control derivation, g/m3";
+      Real e_QWS_i "integral of control derivation";
       inWWSensor InfWWSensor annotation(
         Placement(visible = true, transformation(origin = {106, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {106, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-    
-    /*parameter String S_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/sludge.txt";
-      Modelica.Blocks.Sources.CombiTimeTable S_data(tableOnFile = true, fileName = S_File, smoothness = Modelica.Blocks.Types.Smoothness.ContinuousDerivative, extrapolation = Modelica.Blocks.Types.Extrapolation.Periodic, tableName = "S_data", columns = {2, 3}, startTime = 0.0, timeScale = 1, offset = {0}, verboseRead = true);
- */  OpenWasteWater.ASM3.outQ Out_RS annotation(
+      OpenWasteWater.ASM3.inQ In_Q annotation(
+        Placement(visible = true, transformation(origin = {106, 48}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {106, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.outQ Out_RS annotation(
         Placement(visible = true, transformation(origin = {-122, 78}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-96, 76}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-        OpenWasteWater.ASM3.outQ Out_WS annotation(
+      OpenWasteWater.ASM3.outQ Out_WS annotation(
         Placement(visible = true, transformation(origin = {-122, -52}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {-94, -52}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-/*      equation
-      Out_RS.Q = S_data.y[1];
-      Out_WS.Q = S_data.y[2];*/
-      equation
-// controlled Return Sludge RS = 1
-      Out_RS.Q = 1.52*InfWWSensor.Value.Q;
-//constant pumps
-//C_RS.Q = Q_RS;
-      Out_WS.Q = 0.04*InfWWSensor.Value.Q;
+
+    initial equation
+      e_QWS_i = 1.0;
+    
+    equation
+      Out_RS.Q + Out_WS.Q = -In_Q.Q;
+      SRT = (V_R*R1_TSS)/(Out_WS.Q*SC_Out2_X_SS + InfWWSensor.Value.Q*SC_Out1_X_SS);
+      der(iSRT) = SRT;
+      mSRT = iSRT/time;
+      e_QWS = SludgeAge_SP - SRT;
+      e_QWS = der(e_QWS_i);
+      P_QWS = e_QWS*k_P_QWS;
+      I_QWS = e_QWS_i*k_I_QWS;
+      D_QWS = der(e_QWS)*k_D_QWS;
+      Out_WS.Q = max(10, Out_WS.Q + P_QWS + I_QWS + D_QWS);
       annotation(
         Icon(graphics = {Rectangle(origin = {-5, 7}, lineThickness = 0.75, extent = {{-111, 85}, {111, -85}})}));
     end RS_WS_controller;
@@ -1151,14 +1171,14 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Real P_NO "proportional controller part";
       Real I_NO "integral controller part";
       Real D_NO "differential controler part";
-      parameter Real k_P_NO = 2000 "k-value proportional part";
-      parameter Real k_I_NO = 1000 "k-value integral part";
+      parameter Real k_P_NO = 2 "k-value proportional part";
+      parameter Real k_I_NO = 2 "k-value integral part";
       parameter Real k_D_NO = 0 "k-value of the differential part";
       Real P_O2 "proportional controller part";
       Real I_O2 "integral controller part";
-      Real D_O2 "differential controler part";
-      parameter Real k_P_O2 = 2000 "k-value proportional part";
-      parameter Real k_I_O2 = 1000 "k-value integral part";
+//      Real D_O2 "differential controler part";
+      parameter Real k_P_O2 = 2 "k-value proportional part";
+      parameter Real k_I_O2 = 2 "k-value integral part";
       parameter Real k_D_O2 = 0 "k-value of the differential part";
       Real e_NO ", e_O2 control derivation, g/m3";
       Real e_NO_i "integral of control derivation";
@@ -1191,10 +1211,10 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       der(e_O2_i) = e_O2;
       P_O2 = e_O2*k_P_O2;
       I_O2 = e_O2_i*k_I_O2;
-      D_O2 = der(e_O2)*k_D_O2;
-      h = mod(time*6,1);
+    //  D_O2 = der(e_O2)*k_D_O2;
+      h = mod(time*4,1);
       if h > f_aeration then
-        OutQBlow.Q = max(0, Q_air_R + P_O2 + I_O2 + D_O2);
+        OutQBlow.Q = max(0, Q_air_R + P_O2 + I_O2);
       else
         OutQBlow.Q = 0;
       end if;
@@ -1467,7 +1487,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       Out2WWSensor.Value.NH = Out2.S.NH;
       Out2WWSensor.Value.NO = Out2.S.NO;
       Out2WWSensor.Value.Q = abs(Out2.Q);
-//  Out2WWSensor.Value.TSS = Out2.X.SS;
+  Out2WWSensor.Value.TSS = Out2.X.SS;
       annotation(
         defaultComponentName = "PreThick",
         Documentation(info = "<html>
@@ -1805,16 +1825,18 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     end BottomPart;
 
     model SCL
-      // parameter Real Q2 = 18881 "Return sludge flow + waste sludge";
-      parameter Real fns = 0.00228 "fraction of not sedimentable soldis";
-      parameter Real A = 1500.0 "m2";
+    
+      parameter Real fns = 0.00228 "fraction of non-sedimentable solids";
+      parameter Real A = 1500.0 "m2 surface area";
       //parameter Real H = 3.75 "m";
-      parameter Real z = 0.38 "m";
+      parameter Real z = 0.38 "m height of each layer";
       extends OpenWasteWater.Icons.SecClar;
       InPipe In1 annotation(
         Placement(transformation(extent = {{-110, 4}, {-90, 24}}, rotation = 0)));
       OutPipe Out1 annotation(
         Placement(transformation(extent = {{92, 47}, {112, 67}}, rotation = 0)));
+    OpenWasteWater.ASM3.outQ outQ annotation(
+        Placement(visible = true, transformation(origin = {52, 92}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {29, -71}, extent = {{-13, -13}, {13, 13}}, rotation = 0)));
       TopPart Top(A = A, z = z);
       UpPart Up1(A = A, z = z), Up2(A = A, z = z), Up3(A = A, z = z);
       InputPart InC(A = A, z = z, fns = fns);
@@ -1823,7 +1845,7 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       OutPipe Out2 annotation(
         Placement(visible = true, transformation(origin = {0, -98}, extent = {{-10, -10}, {10, 10}}, rotation = 0), iconTransformation(origin = {0, -98}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
     equation
-          connect(In1, InC.In1);
+      connect(In1, InC.In1);
       connect(Top.Out1, Out1);
       connect(Bottom.Out1, Out2);
 //////////////////////////////////////////////////////
@@ -1850,6 +1872,8 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       connect(Down4.oXup, Down3.iXdown);
       connect(Down4.Out1, Bottom.In1);
       connect(Bottom.oXup, Down4.iXdown);
+    //////////////////////////////////////////////////////
+        outQ.Q = Bottom.Out1.Q;
       annotation(
         defaultComponentName = "SCL",
         Documentation(info = "<html>
@@ -2369,13 +2393,13 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
     model Fuerstenwalde
       OpenWasteWater.ASM3.Inflow Inf(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/Fuerstenwalde.txt", T = 8) annotation(
         Placement(visible = true, transformation(origin = {-90, 64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.Blower B1(Qini = 130000, Qmax = 500000) annotation(
+      OpenWasteWater.ASM3.TechUnits.Blower B1(Qini = 30000, Qmax = 500000, Qmin = 0.0001, k_RT = 50) annotation(
         Placement(visible = true, transformation(origin = {-30, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.TechUnits.Pump RS_Pump(Qini = 9123, Qmax = 100000) annotation(
         Placement(visible = true, transformation(origin = {-44, -48}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.TechUnits.Pump WS_Pump(Qini = 294) annotation(
         Placement(visible = true, transformation(origin = {46, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.SecClar.SCL SC(A = 2121, fns = 0.00008, z = 3.75) annotation(
+      OpenWasteWater.ASM3.SecClar.SCL SC(A = 2121, fns = 0.00008, z = 0.38) annotation(
         Placement(visible = true, transformation(origin = {26, 42}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.Effluent Clear annotation(
         Placement(visible = true, transformation(origin = {64, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -2389,16 +2413,13 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Placement(visible = true, transformation(origin = {-30, 44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.Mixer2 M2 annotation(
         Placement(visible = true, transformation(origin = {-56, 44}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.RS_WS_controller RS_WS_Q(Q_RS = 294)  annotation(
-        Placement(visible = true, transformation(origin = {64, 14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.Blow_controller BC1(Q_air_R = 130000, SP_O2_max = 5, SP_O2_min = 1, f_aeration = 0.5) annotation(
+    OpenWasteWater.ASM3.TechUnits.RS_WS_controller RS_WS_Q(R1_TSS = R1.TSS, R1_X_SS = R1.X.SS, SC_Out1_X_SS = SC.Out1.X.SS, SC_Out2_X_SS = SC.Out2.X.SS, SludgeAge_SP = 25, V_R = R1.V_R) annotation(
+        Placement(visible = true, transformation(origin = {64, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Blow_controller BC1(Q_air_R = 30000, SP_O2_max = 1.5, SP_O2_min = 0, f_aeration = 0.5) annotation(
         Placement(visible = true, transformation(origin = {-28, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Real SRT, iSRT, mSRT;
-    initial equation
-      iSRT = 0;
     equation
       connect(Inf.OutSensor1, SensorInf.S_In1) annotation(
-        Line(points = {{-81.9, 68.1}, {-49.9, 68.1}}, color = {78, 154, 6}));
+        Line(points = {{-81.9, 68.1}, {-65.9, 68.1}, {-65.9, 68}, {-50, 68}}, color = {78, 154, 6}));
       connect(SC.Out1, Clear.In1) annotation(
         Line(points = {{36, 48}, {45.2, 48}, {45.2, 52}, {54, 52}}));
       connect(R1.Out1, SC.In1) annotation(
@@ -2420,33 +2441,32 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
       connect(B1.Qair, R1.InQair) annotation(
         Line(points = {{-30.8, 19.8}, {-30.8, 36}, {-30, 34}}, color = {78, 154, 6}));
       connect(RS_WS_Q.Out_WS, WS_Pump.Qset) annotation(
-        Line(points = {{55, 9}, {30.1, 9}, {30.1, -19.2}, {35.6, -19.2}}, color = {78, 154, 6}));
+        Line(points = {{55, 11}, {30.1, 11}, {30.1, -19.2}, {35.6, -19.2}}, color = {78, 154, 6}));
       connect(RS_WS_Q.Out_RS, RS_Pump.Qset) annotation(
-        Line(points = {{54, 22}, {22.8, 22}, {22.8, -45.4}, {-33.6, -45.4}}, color = {78, 154, 6}));
+        Line(points = {{54, 24}, {22.8, 24}, {22.8, -45.4}, {-33.6, -45.4}}, color = {78, 154, 6}));
       connect(R1.OutSensor1, BC1.InSensorR) annotation(
         Line(points = {{-25, 49}, {-14.7, 49}, {-14.7, 27.3}, {-42.7, 27.3}, {-42.7, -12}, {-37, -12}}, color = {78, 154, 6}));
       connect(BC1.OutQBlow, B1.Qset) annotation(
         Line(points = {{-36.8, -19}, {-42.6, -19}, {-42.6, -33}, {-12.6, -33}, {-12.6, 7}, {-19.8, 7}}, color = {78, 154, 6}));
+      connect(SC.outQ, RS_WS_Q.In_Q) annotation(
+        Line(points = {{32, 48}, {32, 70}, {84, 70}, {84, 21}, {75, 21}}, color = {78, 154, 6}));
       connect(SensorInf.S_Out1, RS_WS_Q.InfWWSensor) annotation(
-        Line(points = {{-30, 67.8}, {92, 67.8}, {92, 21.8}, {75, 21.8}}, color = {78, 154, 6}));
-      SRT = (R1.V_R*R1.TSS)/(Clear.In1.Q*Clear.TSS + Sludge.In1.Q*Sludge.TSS);
-      der(iSRT) = SRT;
-      mSRT = iSRT/time;
+        Line(points = {{-30, 67.8}, {92, 67.8}, {92, 24}, {75, 24}}, color = {78, 154, 6}));
       annotation(
-        experiment(StartTime = 0, StopTime = 1226, Tolerance = 1e-06, Interval = 1),
+        experiment(StartTime = 0, StopTime = 1233, Tolerance = 1e-06, Interval = 0.03),
         Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
     end Fuerstenwalde;
     
       model PC_Fuerstenwalde
       OpenWasteWater.ASM3.Inflow Inf(Inf_File = "C:/Users/tamim/Documents/GitHub/OpenWasteWater/Resources/Fuerstenwalde.txt", T = 8) annotation(
         Placement(visible = true, transformation(origin = {-90, 64}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.Blower B1(Qini = 130000, Qmax = 500000) annotation(
+      OpenWasteWater.ASM3.TechUnits.Blower B1(Qini = 130000, Qmax = 500000, k_RT = 200) annotation(
         Placement(visible = true, transformation(origin = {-22, 10}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.TechUnits.Pump RS_Pump(Qini = 9123, Qmax = 100000) annotation(
         Placement(visible = true, transformation(origin = {-44, -48}, extent = {{10, -10}, {-10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.TechUnits.Pump WS_Pump(Qini = 294) annotation(
         Placement(visible = true, transformation(origin = {46, -22}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.SecClar.SCL SC(A = 2121, fns = 0.00008) annotation(
+      OpenWasteWater.ASM3.SecClar.SCL SC(A = 2121, fns = 0.00008, z = 0.38) annotation(
         Placement(visible = true, transformation(origin = {26, 42}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
       OpenWasteWater.ASM3.Effluent Clear annotation(
         Placement(visible = true, transformation(origin = {64, 50}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
@@ -2458,82 +2478,84 @@ package ASM3 "Component models for the Activated Sludge Model No.3"
         Placement(visible = true, transformation(origin = {-40, 68}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
       OpenWasteWater.ASM3.AlternateTank R1(H = 4.5, V_R = 17600, kkLa = 4) annotation(
         Placement(visible = true, transformation(origin = {-22, 44}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.Mixer2 M2 annotation(
+      OpenWasteWater.ASM3.Mixer3 M3 annotation(
         Placement(visible = true, transformation(origin = {-46, 44}, extent = {{-10, 10}, {10, -10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.RS_WS_controller RS_WS_Q(Q_RS = 9123, Q_WS = 293)  annotation(
-        Placement(visible = true, transformation(origin = {64, 14}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      OpenWasteWater.ASM3.TechUnits.Blow_controller BC1(Q_air_R = 130000, SP_O2_max = 5, SP_O2_min = 1, f_aeration = 0.8) annotation(
+      OpenWasteWater.ASM3.TechUnits.RS_WS_controller RS_WS_Q(R1_TSS = R1.TSS, R1_X_SS = R1.X.SS, SC_Out1_X_SS = SC.Out1.X.SS, SC_Out2_X_SS = SC.Out2.X.SS, SludgeAge_SP = 50, V_R = R1.V_R)  annotation(
+        Placement(visible = true, transformation(origin = {64, 16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.TechUnits.Blow_controller BC1(Q_air_R = 30000, SP_O2_max = 1.5, SP_O2_min = 1, f_aeration = 0.5, k_P_O2 = 5000, k_I_O2 = 2500, SP_NH = 1.0, SP_NO = 2.0) annotation(
         Placement(visible = true, transformation(origin = {-20, -16}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      Real SRT, iSRT, mSRT;
   OpenWasteWater.ADM.adm_models.ADM1 ADM1(V_D = 2000, V_H = 200)  annotation(
         Placement(visible = true, transformation(origin = {-42, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   OpenWasteWater.ASM3.SedTank.PreClar PC(N = 2, V = 360)  annotation(
         Placement(visible = true, transformation(origin = {-66, 86}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.TechUnits.SludgeControl sludgeControl(SP_Q_max = 100, SP_TSS = 300)  annotation(
+  OpenWasteWater.ASM3.TechUnits.SludgeControl sludgeControl(SP_Q_max = 100, SP_Q_min = 0, SP_TSS = 30000, k_I_Q = 0.01, k_P_Q = 0.01)  annotation(
         Placement(visible = true, transformation(origin = {-60, 32}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   OpenWasteWater.ADM.outflow_ASM3 outflow_ADM annotation(
         Placement(visible = true, transformation(origin = {-16, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
   OpenWasteWater.ADM.inflow_ASM3 inflow_ADM annotation(
         Placement(visible = true, transformation(origin = {-66, -72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-  OpenWasteWater.ASM3.WasteSludge PC_Sludge annotation(
-        Placement(visible = true, transformation(origin = {30, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
-      
-      OpenWasteWater.ASM3.TechUnits.Pump PC_Pump(Qini = 20,Qmax = 20000, k_RT = 50) annotation(
+      OpenWasteWater.ASM3.TechUnits.Pump PC_Pump(Qini = 20,Qmax = 5000, k_RT = 50) annotation(
         Placement(visible = true, transformation(origin = {-88, 14}, extent = {{-10, -10}, {10, 10}}, rotation = -90)));
-    initial equation
-      iSRT = 0;
+      OpenWasteWater.ASM3.Sub_WWTP_Modells.SludgeThickening SludgeThickener annotation(
+          Placement(visible = true, transformation(origin = {24, -72}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      OpenWasteWater.ASM3.WasteSludge ADM_Sludge annotation(
+        Placement(visible = true, transformation(origin = {76, -70}, extent = {{-10, -10}, {10, 10}}, rotation = 0)));
+      
     equation
       connect(Inf.OutSensor1, SensorInf.S_In1) annotation(
         Line(points = {{-81.9, 68.1}, {-49.9, 68.1}}, color = {78, 154, 6}));
-      connect(SC.Out1, Clear.In1) annotation(
-        Line(points = {{36, 48}, {45.2, 48}, {45.2, 52}, {54, 52}}));
-      connect(R1.Out1, SC.In1) annotation(
-        Line(points = {{-12, 44}, {-2.8, 44}, {-2.8, 43}, {16, 43}}));
-      connect(S2.Out2, RS_Pump.In1) annotation(
-        Line(points = {{0.5, 1}, {0.5, -51}, {-34, -51}}));
-      connect(S2.Out1, WS_Pump.In1) annotation(
-        Line(points = {{4.6, 1}, {4.2, 1}, {4.2, -25}, {35.6, -25}}));
-      connect(SC.Out2, S2.In1) annotation(
-        Line(points = {{26, 32}, {26, 27.2}, {2, 27.2}, {2, 20.2}}));
-      connect(WS_Pump.Out1, Sludge.In1) annotation(
-        Line(points = {{55.8, -19}, {67.6, -19}}));
-      connect(RS_Pump.Out1, M2.In2) annotation(
-        Line(points = {{-53.8, -45}, {-79.8, -45}, {-79.8, 41.5}, {-56, 41.5}}));
       connect(Inf.Out1, PC.In1) annotation(
         Line(points = {{-80, 57}, {-80, 86}, {-76, 86}}));
-      connect(PC.Out1, M2.In1) annotation(
-        Line(points = {{-56, 86}, {-56, 45.5}}));
       connect(PC.Out2, PC_Pump.In1) annotation(
         Line(points = {{-66, 76}, {-66, 50}, {-91, 50}, {-91, 24}}));
-connect(PC.OutTSSWWSensor, sludgeControl.In1WWSensor) annotation(
+      connect(PC.OutTSSWWSensor, sludgeControl.In1WWSensor) annotation(
         Line(points = {{-60, 77}, {-60, 35}}));
       connect(sludgeControl.Out1Q, PC_Pump.Qset) annotation(
         Line(points = {{-60, 29}, {-60, 24}, {-85, 24}}));
       connect(PC_Pump.Out1, inflow_ADM.In1) annotation(
         Line(points = {{-85, 4}, {-85, -72}, {-73, -72}}));
-      connect(inflow_ADM.Out1, ADM1.In1) annotation(
-        Line(points = {{-60, -72}, {-60, -71}, {-51, -71}}));
-      connect(ADM1.Out1, outflow_ADM.In1) annotation(
-        Line(points = {{-33, -70}, {-22, -70}}));
-      connect(outflow_ADM.Out1, PC_Sludge.In1) annotation(
-        Line(points = {{-10, -70}, {20, -70}}));
-      connect(M2.Out1, R1.In1) annotation(
-        Line(points = {{-36, 43.5}, {-43, 43.5}, {-43, 44}, {-32, 44}}));
-      connect(B1.Qair, R1.InQair) annotation(
-        Line(points = {{-22.8, 19.8}, {-22.8, 36}, {-22, 34}}, color = {78, 154, 6}));
-      connect(RS_WS_Q.Out_WS, WS_Pump.Qset) annotation(
-        Line(points = {{55, 9}, {30.1, 9}, {30.1, -19.2}, {35.6, -19.2}}, color = {78, 154, 6}));
-      connect(RS_WS_Q.Out_RS, RS_Pump.Qset) annotation(
-        Line(points = {{54, 22}, {22.8, 22}, {22.8, -45.4}, {-33.6, -45.4}}, color = {78, 154, 6}));
+      connect(PC.Out1, M3.In3) annotation(
+        Line(points = {{-56, 86}, {-56, 49}}));
+      connect(M3.Out1, R1.In1) annotation(
+        Line(points = {{-36, 44}, {-32, 44}}));
+      connect(R1.Out1, SC.In1) annotation(
+        Line(points = {{-12, 44}, {-2.8, 44}, {-2.8, 43}, {16, 43}}));
       connect(R1.OutSensor1, BC1.InSensorR) annotation(
         Line(points = {{-16.7, 49.3}, {-6.4, 49.3}, {-6.4, 27.6}, {-34.4, 27.6}, {-34.4, -11.7}, {-28.7, -11.7}}, color = {78, 154, 6}));
       connect(BC1.OutQBlow, B1.Qset) annotation(
         Line(points = {{-28.8, -19}, {-34.6, -19}, {-34.6, -33}, {-4.6, -33}, {-4.6, 7}, {-11.8, 7}}, color = {78, 154, 6}));
+      connect(B1.Qair, R1.InQair) annotation(
+        Line(points = {{-22.8, 19.8}, {-22.8, 36}, {-22, 34}}, color = {78, 154, 6}));
+      connect(SC.Out1, Clear.In1) annotation(
+        Line(points = {{36, 48}, {45.2, 48}, {45.2, 52}, {54, 52}}));
+      connect(SC.Out2, S2.In1) annotation(
+        Line(points = {{26, 32}, {26, 27.2}, {2, 27.2}, {2, 20.2}}));
+      connect(S2.Out2, RS_Pump.In1) annotation(
+        Line(points = {{0.5, 1}, {0.5, -51}, {-34, -51}}));
+      connect(S2.Out1, WS_Pump.In1) annotation(
+        Line(points = {{4.6, 1}, {4.2, 1}, {4.2, -25}, {35.6, -25}}));
+      connect(WS_Pump.Out1, Sludge.In1) annotation(
+        Line(points = {{55.8, -19}, {67.6, -19}}));
+      connect(RS_Pump.Out1, M3.In2) annotation(
+        Line(points = {{-53.8, -45}, {-79.8, -45}, {-79.8, 44}, {-56, 44}}));
+      connect(inflow_ADM.Out1, ADM1.In1) annotation(
+        Line(points = {{-60, -72}, {-60, -71}, {-51, -71}}));
+      connect(ADM1.Out1, outflow_ADM.In1) annotation(
+        Line(points = {{-33, -70}, {-22, -70}}));
+      connect(outflow_ADM.Out1, SludgeThickener.In1) annotation(
+          Line(points = {{-10, -70}, {0, -70}, {0, -67}, {15, -67}}));
+      connect(SludgeThickener.Out1, M3.In1) annotation(
+          Line(points = {{15, -77}, {15, -59}, {-56, -59}, {-56, 40}}));
+      connect(SludgeThickener.Out2,ADM_Sludge.In1) annotation(
+          Line(points = {{33, -77}, {38, -77}, {38, -70}, {66, -70}}));
+      connect(RS_WS_Q.Out_WS, WS_Pump.Qset) annotation(
+        Line(points = {{55, 11}, {30.1, 11}, {30.1, -19.2}, {35.6, -19.2}}, color = {78, 154, 6}));
+      connect(RS_WS_Q.Out_RS, RS_Pump.Qset) annotation(
+        Line(points = {{54, 24}, {22.8, 24}, {22.8, -45.4}, {-33.6, -45.4}}, color = {78, 154, 6}));
+      connect(SC.outQ, RS_WS_Q.In_Q) annotation(
+          Line(points = {{29, 35}, {29, 70}, {84, 70}, {84, 21}, {75, 21}}, color = {78, 154, 6}));
       connect(SensorInf.S_Out1, RS_WS_Q.InfWWSensor) annotation(
-        Line(points = {{-30, 67.8}, {92, 67.8}, {92, 21.8}, {75, 21.8}}, color = {78, 154, 6}));
-      SRT = (R1.V_R*R1.TSS)/(Clear.In1.Q*Clear.TSS + Sludge.In1.Q*Sludge.TSS);
-      der(iSRT) = SRT;
-      mSRT = iSRT/time;
+        Line(points = {{-30, 67.8}, {92, 67.8}, {92, 24}, {75, 24}}, color = {78, 154, 6}));
       annotation(
         experiment(StartTime = 0, StopTime = 1233, Tolerance = 1e-06, Interval = 1),
         Diagram(coordinateSystem(extent = {{-100, -100}, {100, 100}})));
